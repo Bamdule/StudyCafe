@@ -21,26 +21,27 @@ public class SeatRepositoryImpl implements SeatRepositoryCustom {
 
     @Override
     public List<SeatVO> findAllSeatByRoomId(Integer roomId) {
-        JPAQueryFactory query = new JPAQueryFactory(em);
-
-        return query
-                .select(Projections.bean(
-                        SeatVO.class,
-                        seat.id,
-                        seat.number,
-                        member.id.as("memberId"),
-                        member.name.as("memberName"),
-                        seatUsage.startDt,
-                        seat.status
-                ))
-                .from(seat)
-                .join(seat.room, room)
-                .leftJoin(seatUsage).on(seatUsage.seat.id.eq(seat.id))
-                .leftJoin(seatUsage.member, member)
-                .where(seat.room.id.eq(roomId))
-                .orderBy(seat.number.asc())
-                .fetch()
-                ;
+        return null;
+//        JPAQueryFactory query = new JPAQueryFactory(em);
+//
+//        return query
+//                .select(Projections.bean(
+//                        SeatVO.class,
+//                        seat.id,
+//                        seat.number,
+//                        member.id.as("memberId"),
+//                        member.name.as("memberName"),
+//                        seatUsage.startDt,
+//                        seat.status
+//                ))
+//                .from(seat)
+//                .join(seat.room, room)
+//                .leftJoin(seatUsage).on(seatUsage.seat.id.eq(seat.id))
+//                .leftJoin(seatUsage.member, member)
+//                .where(seat.room.id.eq(roomId))
+//                .orderBy(seat.number.asc())
+//                .fetch()
+//                ;
 
     }
 }

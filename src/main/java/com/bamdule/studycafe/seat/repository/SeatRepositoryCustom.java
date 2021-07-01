@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface SeatRepositoryCustom {
 
-    List<SeatVO> findAllSeatByRoomId(Integer roomId);
+    public List<SeatVO> findAllSeatByRoomId(Integer roomId);
 
 }
