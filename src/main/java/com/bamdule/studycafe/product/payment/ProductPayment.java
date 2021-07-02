@@ -21,8 +21,8 @@ public class ProductPayment {
     @Column(name = "remaining_time", columnDefinition = "int default 0")
     private Integer remainingTime;
 
-    @Column(name = "start_dt")
-    private LocalDateTime startDt;
+    @Column(name = "payment_dt")
+    private LocalDateTime paymentDt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)

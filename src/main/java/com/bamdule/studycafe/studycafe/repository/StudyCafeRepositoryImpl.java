@@ -1,6 +1,5 @@
 package com.bamdule.studycafe.studycafe.repository;
 
-import com.bamdule.studycafe.room.QRoom;
 import com.bamdule.studycafe.room.RoomVO;
 import com.bamdule.studycafe.seat.SeatVO;
 import com.bamdule.studycafe.studycafe.StudyCafeVO;
@@ -14,7 +13,7 @@ import java.util.List;
 import static com.bamdule.studycafe.member.QMember.member;
 import static com.bamdule.studycafe.room.QRoom.room;
 import static com.bamdule.studycafe.seat.QSeat.seat;
-import static com.bamdule.studycafe.seat.seatusage.QSeatUsage.seatUsage;
+import static com.bamdule.studycafe.seatusage.QSeatUsage.seatUsage;
 import static com.bamdule.studycafe.studycafe.QStudyCafe.studyCafe;
 
 public class StudyCafeRepositoryImpl implements StudyCafeRepositoryCustom {

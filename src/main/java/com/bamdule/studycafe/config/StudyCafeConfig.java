@@ -2,10 +2,6 @@ package com.bamdule.studycafe.config;
 
 import com.bamdule.studycafe.room.RoomVO;
 import com.bamdule.studycafe.studycafe.service.StudyCafeService;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

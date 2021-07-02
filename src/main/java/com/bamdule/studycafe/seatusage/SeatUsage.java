@@ -1,4 +1,4 @@
-package com.bamdule.studycafe.seat.seatusage;
+package com.bamdule.studycafe.seatusage;
 
 import com.bamdule.studycafe.member.Member;
 import com.bamdule.studycafe.seat.Seat;

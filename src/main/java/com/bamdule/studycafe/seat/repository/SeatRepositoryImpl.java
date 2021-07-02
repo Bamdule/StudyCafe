@@ -1,18 +1,10 @@
 package com.bamdule.studycafe.seat.repository;
 
 import com.bamdule.studycafe.seat.SeatVO;
-import com.bamdule.studycafe.seat.seatusage.QSeatUsage;
-import com.querydsl.core.types.Projections;
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
 import java.util.List;
-
-import static com.bamdule.studycafe.member.QMember.member;
-import static com.bamdule.studycafe.room.QRoom.room;
-import static com.bamdule.studycafe.seat.QSeat.seat;
-import static com.bamdule.studycafe.seat.seatusage.QSeatUsage.seatUsage;
 
 public class SeatRepositoryImpl implements SeatRepositoryCustom {
 

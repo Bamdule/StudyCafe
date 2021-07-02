@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -21,12 +22,15 @@ public class Member {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, updatable = false)
     private String phone;
 
     @JsonIgnore
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     private String password;
+
+    @Column(name = "join_dt", updatable = false)
+    private LocalDateTime joinDt;
 
 
 }

@@ -1,4 +1,4 @@
-package com.bamdule.studycafe.seat.seatusage.history;
+package com.bamdule.studycafe.seatusage.history;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
