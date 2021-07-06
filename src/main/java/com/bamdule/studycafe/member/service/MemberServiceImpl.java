@@ -47,21 +47,22 @@ public class MemberServiceImpl implements MemberService {
 //        return memberTO;
 //    }
 
-    private Member duplicatePhoneCheck(String phone) {
-        return memberRepository.findMemberByPhone(phone);
-    }
-
     @Override
     public MemberTO saveMember(MemberTO memberTO) {
 
-        Member member = modelMapper.map(memberTO, Member.class);
 
+        if (memberRepository.findMemberByPhone(memberTO.getPhone()) != null) {
+            throw new CustomException(ErrorCode.DUPLICATED_PHONE_NUMBER);
+        }
+
+        Member member = modelMapper.map(memberTO, Member.class);
 
         member.setPassword(passwordEncoder.encode(memberTO.getPassword()));
         member.setJoinDt(LocalDateTime.now());
         memberRepository.save(member);
 
         memberTO.setId(member.getId());
+        memberTO.setJoinDt(member.getJoinDt());
         return memberTO;
     }
 

@@ -18,7 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-@TestPropertySource(locations = "classpath:test.yml")
+@TestPropertySource(locations = "classpath:test.properties")
 class SeatServiceImplTest {
 
     @Autowired

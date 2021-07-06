@@ -40,7 +40,9 @@ public class ErrorsResponse {
             fieldError.put("field", e.getField());
             fieldError.put("code", e.getCode());
             fieldError.put("defaultMessage", e.getDefaultMessage());
-            fieldError.put("rejectedValue", e.getRejectedValue());
+            if (e.getRejectedValue() != null) {
+                fieldError.put("rejectedValue", e.getRejectedValue());
+            }
             fieldErrors.add(fieldError);
         });
 
@@ -50,22 +52,22 @@ public class ErrorsResponse {
         return errorMap;
     }
 
-    public static Map<String, Object> globalErrors(int status, String error, String message, Errors errors) {
-
-        List<Map<String, Object>> globalErrors = new ArrayList<>();
-
-        errors.getGlobalErrors().forEach(e -> {
-            Map<String, Object> globalError = new IdentityHashMap<>();
-
-            globalError.put("code", e.getCode());
-            globalError.put("defaultMessage", e.getDefaultMessage());
-            globalErrors.add(globalError);
-        });
-
-        Map<String, Object> errorMap = error(status, error, message);
-        errorMap.put("errors", globalErrors);
-
-        return errorMap;
-    }
+//    public static Map<String, Object> globalErrors(int status, String error, String message, Errors errors) {
+//
+//        List<Map<String, Object>> globalErrors = new ArrayList<>();
+//
+//        errors.getGlobalErrors().forEach(e -> {
+//            Map<String, Object> globalError = new IdentityHashMap<>();
+//
+//            globalError.put("code", e.getCode());
+//            globalError.put("defaultMessage", e.getDefaultMessage());
+//            globalErrors.add(globalError);
+//        });
+//
+//        Map<String, Object> errorMap = error(status, error, message);
+//        errorMap.put("errors", globalErrors);
+//
+//        return errorMap;
+//    }
 
 }
