@@ -40,11 +40,11 @@ public class ControllerExceptionHandler {
             logger.error("", e.getException());
         }
 
-        HttpStatus httpStatus = e.getErrorCode().getHttpStatus();
+        HttpStatus httpStatus = e.getExceptionCode().getHttpStatus();
         Map<String, Object> errors = ErrorsResponse.error(
                 httpStatus.value(),
-                e.getErrorCode().getCode(),
-                e.getErrorCode().getMessage()
+                e.getExceptionCode().getCode(),
+                e.getMessage() == null ? e.getExceptionCode().getMessage() : e.getMessage()
         );
 
         return ResponseEntity.status(httpStatus).body(errors);

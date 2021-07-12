@@ -1,5 +1,6 @@
 package com.bamdule.studycafe.config;
 
+import com.bamdule.studycafe.common.JWTUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

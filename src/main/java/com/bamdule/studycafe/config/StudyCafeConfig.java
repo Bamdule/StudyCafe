@@ -1,7 +1,7 @@
 package com.bamdule.studycafe.config;
 
-import com.bamdule.studycafe.room.RoomVO;
-import com.bamdule.studycafe.studycafe.service.StudyCafeService;
+import com.bamdule.studycafe.entity.room.RoomVO;
+import com.bamdule.studycafe.entity.studycafe.service.StudyCafeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

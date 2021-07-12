@@ -7,22 +7,25 @@ import lombok.Setter;
 @Setter
 public class CustomException extends RuntimeException {
 
-    private ErrorCode errorCode;
+    private ExceptionCode exceptionCode;
 
     private Exception exception;
 
-    public CustomException(ErrorCode errorCode) {
-        this(errorCode, errorCode.getMessage());
+    private String message;
+
+    public CustomException(ExceptionCode exceptionCode) {
+        this(exceptionCode, exceptionCode.getMessage());
     }
 
-    public CustomException(ErrorCode errorCode, String message) {
+    public CustomException(ExceptionCode exceptionCode, String message) {
         super(message);
-        this.errorCode = errorCode;
+        this.exceptionCode = exceptionCode;
+        this.message = message;
     }
 
-    public CustomException(ErrorCode errorCode, Exception exception) {
+    public CustomException(ExceptionCode exceptionCode, Exception exception) {
         super(exception.getMessage());
-        this.errorCode = errorCode;
+        this.exceptionCode = exceptionCode;
         this.exception = exception;
     }
 }
