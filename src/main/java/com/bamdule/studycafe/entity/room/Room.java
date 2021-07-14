@@ -21,6 +21,12 @@ public class Room {
     @Column
     private String name;
 
+    @Column
+    private Integer width;
+
+    @Column
+    private Integer height;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "study_cafe_id", nullable = false)
     private StudyCafe studyCafe;

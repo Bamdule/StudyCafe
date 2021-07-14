@@ -42,7 +42,9 @@ public class StudyCafeRepositoryImpl implements StudyCafeRepositoryCustom {
                 .select(Projections.bean(
                         RoomVO.class,
                         room.id,
-                        room.name))
+                        room.name,
+                        room.width,
+                        room.height))
                 .from(room)
                 .where(room.studyCafe.id.eq(studyCafeId))
                 .fetch()
@@ -60,7 +62,10 @@ public class StudyCafeRepositoryImpl implements StudyCafeRepositoryCustom {
                         member.id.as("memberId"),
                         member.name.as("memberName"),
                         seatUsage.startDt,
-                        seat.status
+                        seatUsage.endDt,
+                        seat.status,
+                        seat.row,
+                        seat.col
                 ))
                 .from(seat)
                 .join(seat.room, room)

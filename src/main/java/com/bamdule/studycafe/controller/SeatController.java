@@ -1,4 +1,4 @@
-package com.bamdule.studycafe.entity.seat;
+package com.bamdule.studycafe.controller;
 
 import com.bamdule.studycafe.entity.seat.service.SeatService;
 import org.springframework.beans.factory.annotation.Autowired;

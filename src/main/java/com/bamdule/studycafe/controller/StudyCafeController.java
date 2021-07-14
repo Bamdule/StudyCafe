@@ -1,4 +1,4 @@
-package com.bamdule.studycafe.entity.studycafe;
+package com.bamdule.studycafe.controller;
 
 import com.bamdule.studycafe.common.JWTUtils;
 import com.bamdule.studycafe.config.StudyCafeConfig;

@@ -1,6 +1,7 @@
-package com.bamdule.studycafe.entity.member;
+package com.bamdule.studycafe.controller;
 
 import com.bamdule.studycafe.common.JWTUtils;
+import com.bamdule.studycafe.entity.member.MemberTO;
 import com.bamdule.studycafe.entity.member.service.MemberService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

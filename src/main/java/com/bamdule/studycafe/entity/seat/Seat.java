@@ -29,5 +29,10 @@ public class Seat {
     @JoinColumn(name = "room_id", nullable = false)
     private Room room;
 
+    @Column
+    private Integer row;
+
+    @Column
+    private Integer col;
 
 }

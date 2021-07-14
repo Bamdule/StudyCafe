@@ -13,4 +13,16 @@ public class SeatVO {
 
     private SeatStatus status;
 
+    private Integer memberId;
+
+    private String memberName;
+
+    private LocalDateTime startDt;
+    private LocalDateTime endDt;
+
+    private Integer row;
+
+    private Integer col;
+
+
 }
