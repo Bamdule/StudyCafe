@@ -6,6 +6,8 @@ import com.bamdule.studycafe.entity.seatusage.SeatUsageVO;
 import com.bamdule.studycafe.entity.studycafe.service.StudyCafeService;
 import com.bamdule.studycafe.exception.CustomException;
 import com.bamdule.studycafe.exception.ExceptionCode;
+import com.bamdule.studycafe.websocket.MessageType;
+import com.bamdule.studycafe.websocket.WebSocketHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +23,9 @@ public class StudyCafeController {
 
     @Autowired
     private StudyCafeConfig studyCafeConfig;
+
+    @Autowired
+    private WebSocketHandler webSocketHandler;
 
     @Autowired
     private JWTUtils jwtUtils;
@@ -50,6 +55,8 @@ public class StudyCafeController {
         Integer memberId = getMemberIdByHeader(requestHeader);
 
         SeatUsageVO seatUsageVO = studyCafeService.saveSeatUsage(memberId, seatId);
+        webSocketHandler.broadcast(MessageType.USE_SEAT, seatUsageVO);
+
         return ResponseEntity.ok(seatUsageVO);
     }
 
@@ -57,7 +64,8 @@ public class StudyCafeController {
     public ResponseEntity deleteSeatUsage(@RequestHeader Map<String, Object> requestHeader) {
         Integer memberId = getMemberIdByHeader(requestHeader);
 
-        studyCafeService.deleteSeatUsage(memberId);
+        SeatUsageVO seatUsageVO = studyCafeService.deleteSeatUsage(memberId);
+        webSocketHandler.broadcast(MessageType.EXIT_SEAT, seatUsageVO);
 
         return ResponseEntity.ok().build();
     }
@@ -66,6 +74,14 @@ public class StudyCafeController {
     public ResponseEntity updateSeatUsage(@RequestHeader Map<String, Object> requestHeader) {
         Integer memberId = getMemberIdByHeader(requestHeader);
         SeatUsageVO seatUsageVO = studyCafeService.updateSeatUsage(memberId);
+        return ResponseEntity.ok(seatUsageVO);
+    }
+
+    @GetMapping(value = "/myseat")
+    public ResponseEntity getMySeat(@RequestHeader Map<String, Object> requestHeader) {
+        Integer memberId = getMemberIdByHeader(requestHeader);
+
+        SeatUsageVO seatUsageVO = studyCafeService.getSeatUsageByMemberId(memberId);
         return ResponseEntity.ok(seatUsageVO);
     }
 

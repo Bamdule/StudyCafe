@@ -1,6 +1,9 @@
 package com.bamdule.studycafe.scheduler;
 
+import com.bamdule.studycafe.entity.seatusage.SeatUsageVO;
 import com.bamdule.studycafe.entity.seatusage.service.SeatUsageService;
+import com.bamdule.studycafe.websocket.MessageType;
+import com.bamdule.studycafe.websocket.WebSocketHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +11,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Component
 public class SchedulerTask {
@@ -17,13 +21,20 @@ public class SchedulerTask {
     @Autowired
     private SeatUsageService seatUsageService;
 
-    //10초마다 실행
+    @Autowired
+    private WebSocketHandler webSocketHandler;
+
+    //1분 마다 실행
     @Scheduled(cron = "0 * * * * *")
-    public void testSchedule() {
+    public void checkExpiredSeatSchedule() {
 
         LocalDateTime now = LocalDateTime.now();
         logger.info("[MYTEST] test batch {}", now);
-        seatUsageService.deleteExpiredSeatUsages(now);
+        List<SeatUsageVO> expiredSeatUsages = seatUsageService.getExpiredSeatUsages(now);
+        if (expiredSeatUsages.size() > 0) {
+            seatUsageService.deleteExpiredSeatUsages(now);
+            webSocketHandler.broadcast(MessageType.EXPIRED_SEAT, expiredSeatUsages);
+        }
 
     }
 }

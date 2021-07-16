@@ -1,6 +1,6 @@
 package com.bamdule.studycafe.entity.seatusage;
 
-import com.bamdule.studycafe.entity.seat.SeatStatus;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,13 +20,19 @@ public class SeatUsageVO {
 
     private Integer number;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private SeatStatus status;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer memberId;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String memberName;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private LocalDateTime startDt;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private LocalDateTime endDt;
 
 }

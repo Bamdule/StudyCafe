@@ -3,45 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+
+
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css"/>
-    <script type="text/javascript" th:src="@{/js/service/SeatService.js}"></script>
+
+    <link rel="stylesheet" type="text/css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/fomantic-ui/2.8.8/semantic.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fomantic-ui/2.8.8/semantic.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+
+    <script type="text/javascript" th:src="@{/js/common/common.js}"></script>
+    <script type="text/javascript" th:src="@{/js/common/JwtUtils.js}"></script>
+
+    <script type="text/javascript" th:src="@{/js/common/websocket/Websocket.js}"></script>
+    <script type="text/javascript" th:src="@{/js/common/modals/BaseModal.js}"></script>
+    <script type="text/javascript" th:src="@{/js/common/modals/LoginModal.js}"></script>
+    <script type="text/javascript" th:src="@{/js/common/modals/MySeatModal.js}"></script>
+
+    <script type="text/javascript" th:src="@{/js/common/api/ApiService.js}"></script>
     <script type="text/javascript" th:src="@{/js/seats/SeatManager.js}"></script>
     <script type="text/javascript" th:src="@{/js/seats/seats.js}"></script>
 
-    <style>
-        #grid {
-            display: grid;
-            grid-template-columns: repeat(3, 50px);
-            grid-template-rows: repeat(3, 50px);
-            gap: 5px 5px;
-        }
-        .cell {
-            border: gray solid 1px;
-            background-color: beige;
-            display :flex;
-            justify-content: center;
-            align-items: center;
-        }
 
+    <style>
     </style>
 </head>
 <body>
-<div id="grid">
-    <div class="cell">1</div>
-    <div class="cell">2</div>
-    <div class="cell">3</div>
-    <div class="cell">3</div>
-    <div class="cell">3</div>
-    <div class="cell">3</div>
-    <div class="cell">3</div>
-    <div class="cell">3</div>
-    <div class="cell">3</div>
-</div>
-<div style="height: 50px"></div>
-<div id="seatBaseDiv">
+<div style="width:100%; padding: 10px; display: flex;">
 
+    <button id="mySeatBtn" style="display: none;">내 좌석 정보</button>
+    <button id="loginBtn">로그인</button>
+    <button id="logoutBtn">로그아웃</button>
+
+    <!--    <button id="seatTimeExtensionBtn">시간 연장</button>-->
+    <!--    <button id="seatMoveBtn">좌석 이동</button>-->
+</div>
+
+<div id="seatBaseDiv" style="padding: 10px;">
 </div>
 </body>
 </html>

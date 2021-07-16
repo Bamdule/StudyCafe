@@ -69,7 +69,6 @@ public class SeatUsageServiceImpl implements SeatUsageService {
                     .memberName(member.getName())
                     .seatId(seat.getId())
                     .number(seat.getNumber())
-                    .status(seat.getStatus())
                     .startDt(seatUsage.getStartDt())
                     .endDt(seatUsage.getEndDt())
                     .build();
@@ -77,14 +76,23 @@ public class SeatUsageServiceImpl implements SeatUsageService {
     }
 
     @Override
-    public void deleteSeatUsage(Integer memberId) {
+    public SeatUsageVO deleteSeatUsage(Integer memberId) {
 
         Optional<SeatUsage> optionalSeatUsage = seatUsageRepository.findByMemberId(memberId);
 
         if (optionalSeatUsage.isEmpty()) {
             throw new CustomException(ExceptionCode.NOT_FOUND_USER_IN_USE);
         } else {
-            seatUsageRepository.delete(optionalSeatUsage.get());
+            SeatUsage seatUsage = optionalSeatUsage.get();
+
+            SeatUsageVO seatUsageVO = SeatUsageVO.builder()
+                    .id(seatUsage.getId())
+                    .seatId(seatUsage.getSeat().getId())
+                    .number(seatUsage.getSeat().getNumber())
+                    .build();
+
+            seatUsageRepository.delete(seatUsage);
+            return seatUsageVO;
         }
     }
 
@@ -115,8 +123,24 @@ public class SeatUsageServiceImpl implements SeatUsageService {
     }
 
     @Override
+    public List<SeatUsageVO> getExpiredSeatUsages(LocalDateTime now) {
+        return seatUsageRepository.getExpiredSeatUsages(now);
+    }
+
+    @Override
     public void deleteExpiredSeatUsages(LocalDateTime now) {
         seatUsageRepository.deleteExpiredSeatUsages(now);
+    }
+
+    @Override
+    public SeatUsageVO getSeatUsageByMemberId(Integer memberId) {
+        Optional<SeatUsageVO> optionalSeatUsage = seatUsageRepository.getSeatUsageByMemberId(memberId);
+
+        if (optionalSeatUsage.isEmpty()) {
+            throw new CustomException(ExceptionCode.NOT_FOUND_USER_IN_USE);
+        } else {
+            return optionalSeatUsage.get();
+        }
     }
 
     private boolean isExtensionTime(LocalDateTime extensionTime) {

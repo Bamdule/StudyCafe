@@ -1,5 +1,6 @@
 package com.bamdule.studycafe.entity.seat;
 
+import com.bamdule.studycafe.entity.seatusage.SeatStatus;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -11,7 +12,7 @@ public class SeatVO {
 
     private Integer number;
 
-    private SeatStatus status;
+    private String status;
 
     private Integer memberId;
 

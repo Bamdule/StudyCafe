@@ -113,12 +113,6 @@ public class MemberServiceImpl implements MemberService {
 
         data.put("memberId", paidMemberVO.getMemberId());
         data.put("memberName", paidMemberVO.getMemberName());
-        data.put("paymentDt", paidMemberVO.getPaymentDt().toString());
-        data.put("remainingTime", paidMemberVO.getRemainingTime());
-        data.put("validDays", paidMemberVO.getValidDays());
-        data.put("productName", paidMemberVO.getProductName());
-        data.put("payment", paidMemberVO.isPayment());
-
 
         return jwtUtils.createToken(data);
     }

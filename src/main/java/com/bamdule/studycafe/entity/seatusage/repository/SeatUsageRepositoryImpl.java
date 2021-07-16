@@ -32,7 +32,6 @@ public class SeatUsageRepositoryImpl implements SeatUsageRepositoryCustom {
                         seatUsage.id,
                         seatUsage.seat.id.as("seatId"),
                         seatUsage.seat.number,
-                        seatUsage.seat.status,
                         seatUsage.member.id.as("memberId"),
                         seatUsage.member.name.as("memberName"),
                         seatUsage.startDt,
@@ -55,8 +54,7 @@ public class SeatUsageRepositoryImpl implements SeatUsageRepositoryCustom {
                 .select(Projections.bean(
                         SeatVO.class,
                         seat.id,
-                        seat.number,
-                        seat.status
+                        seat.number
                 ))
                 .from(seat)
                 .leftJoin(seatUsage).on(seatUsage.seat.id.eq(seat.id))
@@ -76,8 +74,7 @@ public class SeatUsageRepositoryImpl implements SeatUsageRepositoryCustom {
                 .select(Projections.bean(
                         SeatVO.class,
                         seat.id,
-                        seat.number,
-                        seat.status
+                        seat.number
                 ))
                 .from(seatUsage)
                 .where(seatUsage.member.id.eq(memberId))
@@ -100,7 +97,7 @@ public class SeatUsageRepositoryImpl implements SeatUsageRepositoryCustom {
                         seatUsage.endDt
                 ))
                 .from(seatUsage)
-                .where(seatUsage.endDt.goe(now))
+                .where(seatUsage.endDt.loe(now))
                 .fetch()
                 ;
     }

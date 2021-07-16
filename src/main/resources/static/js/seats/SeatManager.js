@@ -3,23 +3,25 @@ class SeatManager {
         this.config = config;
         this.seats = {};
 
-        this.seatDivs = {};
-
         this.init();
         this.status = {
-            "EMPTY": {
-                backgroundColor: "#FFDEA9"
-            },
+
             "USED": {
-                backgroundColor: "#FFDEA9"
-            },
-            "BLANK": {
-                backgroundColor: "#eeeeee"
+                backgroundColor: "beige",
+                code: "USED"
             },
             "UNUSED": {
-                backgroundColor: "#eeeeee"
-            }
+                backgroundColor: "white",
+                code: "UNUSED"
+            },
+            "LIMIT": {
+                backgroundColor: "lightgray",
+                code: "LIMIT"
+            },
         };
+        this.type = {
+            EXPIRED_SEAT: "EXPIRED_SEAT", EXIT_SEAT: "EXIT_SEAT", USE_SEAT: "USE_SEAT"
+        }
     }
 
     init() {
@@ -34,7 +36,7 @@ class SeatManager {
             return;
         }
 
-        let {width = 60, height = 60, row = room.width, column = room.height, seatBaseDiv} = this.config;
+        let {width = 50, height = 50, row = room.width, column = room.height, seatBaseDiv} = this.config;
 
 
         seatBaseDiv.css({
@@ -73,12 +75,12 @@ class SeatManager {
     }
 
     createSeat(seat) {
-        let {number, memberName, memberId} = seat;
+        let {id, number, memberName, memberId} = seat;
         let self = this;
 
         let css = {
             "border": "gray solid 1px",
-            "backgroundColor": "#ffffff",
+            "backgroundColor": this.status[seat.status].backgroundColor,
             cursor: "pointer",
             "user-select": "none",
             "display": "flex",
@@ -89,16 +91,39 @@ class SeatManager {
         let seatDiv = $("<div>", {text: number, css: css});
 
         seatDiv.click(function () {
-            console.log(number, self.seats[number]);
-
+            self.config.seatClick(self.seats[id])
         });
 
-        this.seats[number] = {
+        this.seats[id] = {
             seat,
             seatDiv
         };
 
         return seatDiv;
+    }
 
+    updateSeatInfo(seatId, status) {
+        let seatInfo = this.seats[seatId];
+        let {seat, seatDiv} = seatInfo;
+        seat.status = status.code;
+        seatDiv.css("background-color", status.backgroundColor);
+    }
+
+    updateSeat(data) {
+        let {type, message} = data;
+
+        switch (type) {
+            case this.type.EXPIRED_SEAT:
+                for (let seat of message) {
+                    this.updateSeatInfo(seat.seatId, this.status.UNUSED);
+                }
+                break;
+            case this.type.USE_SEAT:
+                this.updateSeatInfo(message.seatId, this.status.USED);
+                break;
+            case this.type.EXIT_SEAT:
+                this.updateSeatInfo(message.seatId, this.status.UNUSED);
+                break;
+        }
     }
 }

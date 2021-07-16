@@ -15,11 +15,14 @@ public interface StudyCafeService {
     public List<RoomVO> findAllRoom(Integer studyCafeId);
 
     public List<SeatVO> findAllSeat(Integer roomId);
+
     public SeatUsageVO saveSeatUsage(Integer memberId, Integer seatId);
 
-    public void deleteSeatUsage(Integer memberId);
+    public SeatUsageVO deleteSeatUsage(Integer memberId);
 
     public SeatUsageVO updateSeatUsage(Integer memberId);
+
+    public SeatUsageVO getSeatUsageByMemberId(Integer memberId);
 
 
 }

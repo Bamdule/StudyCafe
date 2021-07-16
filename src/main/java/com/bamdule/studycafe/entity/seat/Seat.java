@@ -1,6 +1,7 @@
 package com.bamdule.studycafe.entity.seat;
 
 import com.bamdule.studycafe.entity.room.Room;
+import com.bamdule.studycafe.entity.seatusage.SeatStatus;
 import lombok.*;
 
 import javax.persistence.*;
@@ -12,6 +13,13 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        columnNames = {"room_id", "number"}
+                )
+        }
+)
 public class Seat {
 
     @Id
@@ -22,8 +30,7 @@ public class Seat {
     private Integer number;
 
     @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private SeatStatus status;
+    private boolean active = true;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id", nullable = false)

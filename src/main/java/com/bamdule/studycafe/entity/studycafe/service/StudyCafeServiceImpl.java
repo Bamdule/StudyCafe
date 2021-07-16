@@ -44,12 +44,17 @@ public class StudyCafeServiceImpl implements StudyCafeService {
     }
 
     @Override
-    public void deleteSeatUsage(Integer memberId) {
-        seatUsageService.deleteSeatUsage(memberId);
+    public SeatUsageVO deleteSeatUsage(Integer memberId) {
+        return seatUsageService.deleteSeatUsage(memberId);
     }
 
     @Override
     public SeatUsageVO updateSeatUsage(Integer memberId) {
         return seatUsageService.updateSeatUsage(memberId);
+    }
+
+    @Override
+    public SeatUsageVO getSeatUsageByMemberId(Integer memberId) {
+        return seatUsageService.getSeatUsageByMemberId(memberId);
     }
 }

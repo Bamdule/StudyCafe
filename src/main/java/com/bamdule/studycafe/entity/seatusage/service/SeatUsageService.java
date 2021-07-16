@@ -8,9 +8,13 @@ import java.util.List;
 public interface SeatUsageService {
     public SeatUsageVO saveSeatUsage(Integer memberId, Integer seatId);
 
-    public void deleteSeatUsage(Integer memberId);
+    public SeatUsageVO deleteSeatUsage(Integer memberId);
 
     public SeatUsageVO updateSeatUsage(Integer memberId);
 
+    public List<SeatUsageVO> getExpiredSeatUsages(LocalDateTime now);
+
     public void deleteExpiredSeatUsages(LocalDateTime now);
+
+    public SeatUsageVO getSeatUsageByMemberId(Integer memberId);
 }

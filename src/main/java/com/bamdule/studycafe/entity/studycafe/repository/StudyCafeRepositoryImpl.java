@@ -1,9 +1,12 @@
 package com.bamdule.studycafe.entity.studycafe.repository;
 
 import com.bamdule.studycafe.entity.room.RoomVO;
+import com.bamdule.studycafe.entity.seat.Seat;
 import com.bamdule.studycafe.entity.seat.SeatVO;
+import com.bamdule.studycafe.entity.seatusage.SeatStatus;
 import com.bamdule.studycafe.entity.studycafe.StudyCafeVO;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -63,9 +66,13 @@ public class StudyCafeRepositoryImpl implements StudyCafeRepositoryCustom {
                         member.name.as("memberName"),
                         seatUsage.startDt,
                         seatUsage.endDt,
-                        seat.status,
                         seat.row,
-                        seat.col
+                        seat.col,
+                        new CaseBuilder()
+                                .when(seat.active.isFalse()).then(SeatStatus.LIMIT.toString())
+                                .when(member.id.isNotNull()).then(SeatStatus.USED.toString())
+                                .otherwise(SeatStatus.UNUSED.toString())
+                                .as("status")
                 ))
                 .from(seat)
                 .join(seat.room, room)
@@ -85,8 +92,7 @@ public class StudyCafeRepositoryImpl implements StudyCafeRepositoryCustom {
                 .select(Projections.bean(
                         SeatVO.class,
                         seat.id,
-                        seat.number,
-                        seat.status
+                        seat.number
                 ))
                 .from(room)
                 .join(seat).on(seat.room.id.eq(roomId))
@@ -97,6 +103,6 @@ public class StudyCafeRepositoryImpl implements StudyCafeRepositoryCustom {
                         seatUsage.member.id.isNull()
                 )
                 .fetchOne()
-        ;
+                ;
     }
 }
