@@ -39,7 +39,7 @@ public class ErrorsResponse {
 
             fieldError.put("field", e.getField());
             fieldError.put("code", e.getCode());
-            fieldError.put("defaultMessage", e.getDefaultMessage());
+            fieldError.put("message", e.getDefaultMessage());
             if (e.getRejectedValue() != null) {
                 fieldError.put("rejectedValue", e.getRejectedValue());
             }

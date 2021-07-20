@@ -12,9 +12,17 @@ public class PageController {
     @GetMapping(value = "")
     public ModelAndView home() {
         ModelAndView mav = new ModelAndView("pages/seats");
-
-        mav.addObject("data", "hi!!!");
         return mav;
-
     }
+
+//    @GetMapping(value = "/seatMaker/login")
+//    public String seatMakerLogin() {
+//        return "";
+//    }
+//
+//    @GetMapping(value = "/seatMaker/login")
+//    public String seatMakerLogin() {
+//        return "";
+//    }
+
 }

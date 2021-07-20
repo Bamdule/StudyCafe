@@ -14,5 +14,16 @@ function showToast(message) {
 
 $(document).ajaxError(function (event, request, settings) {
     console.log(request);
-    showToast(request.responseJSON.message)
+    try {
+        let {message, errors} = request.responseJSON;
+        if (errors !== undefined) {
+            for (let error of errors) {
+                showToast(error.message)
+            }
+        } else {
+            showToast(message);
+        }
+    } catch (e) {
+        console.log(e);
+    }
 });

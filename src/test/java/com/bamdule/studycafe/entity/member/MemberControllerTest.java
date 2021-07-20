@@ -1,6 +1,13 @@
 package com.bamdule.studycafe.entity.member;
 
+import com.bamdule.studycafe.entity.serverconfig.ServerConfig;
+import com.bamdule.studycafe.exception.CustomException;
+import com.bamdule.studycafe.exception.ExceptionCode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,6 +26,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.IdentityHashMap;
+import java.util.Map;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -155,7 +165,7 @@ class MemberControllerTest {
     @DisplayName("회원 인증")
     public void verifyJWTMemberTest() throws Exception {
         this.mockMvc.perform(post("/api/member/seatUsage")
-                .header("Authorization","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiZHF3ZXF3ZSIsInN1YiI6Im1lbWJlciIsImlkIjo1LCJwaG9uZSI6IjAxMDI3MzcxNjE0IiwiZXhwIjoxNjI1NjUwMDUzfQ.BH94t-u3CcGn-xGuvhDHukxOpRsprSmlWmtTL6o0Vmc")
+                .header("Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiZHF3ZXF3ZSIsInN1YiI6Im1lbWJlciIsImlkIjo1LCJwaG9uZSI6IjAxMDI3MzcxNjE0IiwiZXhwIjoxNjI1NjUwMDUzfQ.BH94t-u3CcGn-xGuvhDHukxOpRsprSmlWmtTL6o0Vmc")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -163,8 +173,8 @@ class MemberControllerTest {
     }
 
     @Test
-    public void test(){
-        Assertions.assertTrue(passwordEncoder.matches("1234",passwordEncoder.encode("1234")));
+    public void test() {
+        Assertions.assertTrue(passwordEncoder.matches("1234", passwordEncoder.encode("1234")));
     }
 
     public Member generateMember() {
@@ -178,5 +188,68 @@ class MemberControllerTest {
         em.persist(member);
 
         return member;
+    }
+
+    @Test
+    @DisplayName("인증 메일 전송")
+    public void sendEmail() throws Exception {
+        this.mockMvc.perform(post("/api/member/email")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("email", "Bamdule5@gmail.com"))
+                .andDo(print())
+                .andExpect(status().isOk())
+        ;
+    }
+
+    @Test
+    public void tokenTest() {
+
+        String key = "bamdule_member_key";
+        Map<String, Object> data = new IdentityHashMap<>();
+        String jwt = createToken(data, key);
+
+        Map<String, Object> claimMap = null;
+        try {
+            Claims claims = Jwts.parser()
+                    .setSigningKey(key.getBytes("UTF-8")) // Set Key
+                    .parseClaimsJws(jwt) // 파싱 및 검증, 실패 시 에러
+                    .getBody();
+
+            claimMap = claims;
+
+        } catch (ExpiredJwtException e) { // 토큰이 만료되었을 경우
+            throw new CustomException(ExceptionCode.TOKEN_EXPIRATION, e);
+        } catch (Exception e) {
+            throw new CustomException(ExceptionCode.INVALID_TOKEN);
+        }
+    }
+
+    private String createToken(Map<String, Object> data, String key) {
+
+        //Header 부분 설정
+        Map<String, Object> headers = new IdentityHashMap<>();
+        headers.put("typ", "JWT");
+        headers.put("alg", "HS256");
+
+        //payload 부분 설정
+        Map<String, Object> payloads = data;
+
+
+        Long expiredTime = 1000 * 60L * 5L; //
+//        Long expiredTime = 1000 * 60L;
+
+        Date ext = new Date(); // 토큰 만료 시간
+        ext.setTime(ext.getTime() + expiredTime);
+
+        // 토큰 Builder
+        String jwt = Jwts.builder()
+                .setHeader(headers) // Headers 설정
+                .setClaims(payloads) // Claims 설정
+                .setSubject("user")
+                .setExpiration(ext) // 토큰 만료 시간 설정
+                .signWith(SignatureAlgorithm.HS256, key.getBytes()) // HS256과 Key로 Sign
+                .compact(); // 토큰 생성
+
+        return jwt;
     }
 }

@@ -21,6 +21,8 @@
     <script type="text/javascript" th:src="@{/js/common/modals/BaseModal.js}"></script>
     <script type="text/javascript" th:src="@{/js/common/modals/LoginModal.js}"></script>
     <script type="text/javascript" th:src="@{/js/common/modals/MySeatModal.js}"></script>
+    <script type="text/javascript" th:src="@{/js/common/modals/NoticeModal.js}"></script>
+    <script type="text/javascript" th:src="@{/js/common/modals/SignUpModal.js}"></script>
 
     <script type="text/javascript" th:src="@{/js/common/api/ApiService.js}"></script>
     <script type="text/javascript" th:src="@{/js/seats/SeatManager.js}"></script>
@@ -32,16 +34,48 @@
 </head>
 <body>
 <div style="width:100%; padding: 10px; display: flex;">
-
-    <button id="mySeatBtn" style="display: none;">내 좌석 정보</button>
     <button id="loginBtn">로그인</button>
+    <button id="signUpBtn">회원가입</button>
+    <button id="mySeatBtn">내 좌석 정보</button>
     <button id="logoutBtn">로그아웃</button>
 
-    <!--    <button id="seatTimeExtensionBtn">시간 연장</button>-->
-    <!--    <button id="seatMoveBtn">좌석 이동</button>-->
+</div>
+<div style="display: flex; justify-content: center;">
+    <div id="seatBaseDiv" style="padding: 10px;">
+    </div>
 </div>
 
-<div id="seatBaseDiv" style="padding: 10px;">
+<div>
+    <div id="signUpDiv" class="ui form">
+        <div class="field required">
+            <label>이메일</label>
+            <div class="ui action input">
+                <input id="email" type="text"/>
+                <button id="requestEmailCodeBtn" class="ui button">인증</button>
+            </div>
+        </div>
+        <div class="field">
+            <label>인증 코드</label>
+            <input id="emailCode" type="text"/>
+        </div>
+        <div class="field required">
+            <label>이름</label>
+            <input id="name" type="text"/>
+        </div>
+        <div class="field required">
+            <label>휴대폰 번호</label>
+            <input id="phone" type="text"/>
+        </div>
+        <div class="field required">
+            <label>비밀 번호</label>
+            <input id="password" type="password"/>
+        </div>
+
+        <div class="field required">
+            <label>비밀 번호 확인</label>
+            <input id="repassword" type="password"/>
+        </div>
+    </div>
 </div>
 </body>
 </html>

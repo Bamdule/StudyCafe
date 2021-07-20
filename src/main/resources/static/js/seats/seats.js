@@ -25,10 +25,14 @@ $(document).ready(function () {
 
             if (sessionStorage.getItem("scToken") !== null) {
                 if (seat.status === "UNUSED") {
-                    apiService.useSeat(seat.id).then(function () {
-                        showToast(`${seat.number} 좌석을 선택하셨습니다.`);
+                    confirmModal.show({
+                        message: "정말 좌석을 선택하시겠습니까?",
+                        onApprove: function () {
+                            apiService.useSeat(seat.id).then(function () {
+                                showToast(`${seat.number} 좌석을 선택하셨습니다.`);
+                            });
+                        }
                     });
-
                 }
             }
         }
@@ -43,6 +47,14 @@ $(document).ready(function () {
         }
     });
 
+    let confirmModal = new ConfirmModal({
+        title: "알림",
+        onApprove: function () {
+        },
+        onDeny: function () {
+
+        }
+    });
 
     let loginModal = new LoginModal({
         title: "로그인",
@@ -72,10 +84,32 @@ $(document).ready(function () {
         }
     });
 
+    let signUpModal = new SignUpModal({
+        title: "회원 가입",
+        signUpCallback: function (member) {
+            apiService.signUpMember(member)
+                .then(function (data) {
+                    console.log(data);
+                    showToast("회원가입이 완료되었습니다.");
+                    signUpModal.close();
+                });
+        },
+        requestEmailCodeCallback: function (email) {
+            apiService.requestEmailCode(email)
+                .then(function () {
+                    showToast("이메일 인증 코드 발송이 완료되었습니다.");
+                })
+        }
+    });
 
     let loginBtn = $("#loginBtn");
+    let signUpBtn = $("#signUpBtn");
     let mySeatBtn = $("#mySeatBtn");
     let logoutBtn = $("#logoutBtn");
+
+    signUpBtn.click(function () {
+        signUpModal.show();
+    });
 
     loginBtn.click(function () {
         loginModal.show();
@@ -104,12 +138,15 @@ $(document).ready(function () {
 
     function updateMemberUI() {
         loginBtn.css("display", "none");
+        signUpBtn.css("display", "none");
+
         mySeatBtn.css("display", "block");
         logoutBtn.css("display", "block");
     }
 
     function updateNonMemberUI() {
         loginBtn.css("display", "block");
+        signUpBtn.css("display", "block");
         mySeatBtn.css("display", "none");
         logoutBtn.css("display", "none");
     }

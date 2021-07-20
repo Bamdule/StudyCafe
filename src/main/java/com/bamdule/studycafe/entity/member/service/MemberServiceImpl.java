@@ -1,12 +1,13 @@
 package com.bamdule.studycafe.entity.member.service;
 
-import com.bamdule.studycafe.common.JWTUtils;
+import com.bamdule.studycafe.jwt.JWTUtils;
 import com.bamdule.studycafe.entity.member.PaidMemberVO;
 import com.bamdule.studycafe.exception.CustomException;
 import com.bamdule.studycafe.exception.ExceptionCode;
 import com.bamdule.studycafe.entity.member.Member;
 import com.bamdule.studycafe.entity.member.MemberTO;
 import com.bamdule.studycafe.entity.member.repository.MemberRepository;
+import com.bamdule.studycafe.jwt.MemberPayload;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,8 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.IdentityHashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -56,7 +55,6 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public MemberTO saveMember(MemberTO memberTO) {
-
 
         if (memberRepository.findMemberByPhone(memberTO.getPhone()) != null) {
             throw new CustomException(ExceptionCode.DUPLICATED_PHONE_NUMBER);
@@ -109,12 +107,11 @@ public class MemberServiceImpl implements MemberService {
         System.out.println(paidMemberVO);
 
 
-        Map<String, Object> data = new IdentityHashMap<>();
+        MemberPayload memberPayload = new MemberPayload();
+        memberPayload.setMemberId(paidMemberVO.getMemberId());
+        memberPayload.setMemberName(paidMemberVO.getMemberName());
 
-        data.put("memberId", paidMemberVO.getMemberId());
-        data.put("memberName", paidMemberVO.getMemberName());
-
-        return jwtUtils.createToken(data);
+        return jwtUtils.createMemberToken(memberPayload);
     }
 
 }

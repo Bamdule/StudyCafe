@@ -1,9 +1,12 @@
-package com.bamdule.studycafe.common;
+package com.bamdule.studycafe.jwt;
 
 import com.bamdule.studycafe.entity.serverconfig.ServerConfig;
 import com.bamdule.studycafe.entity.serverconfig.ServerConfigRepository;
 import com.bamdule.studycafe.exception.CustomException;
 import com.bamdule.studycafe.exception.ExceptionCode;
+import com.bamdule.studycafe.jwt.EmailPayload;
+import com.bamdule.studycafe.jwt.MemberPayload;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -21,24 +24,57 @@ public class JWTUtils {
     private JWTUtils() {
     }
 
-    private String key;
+    private String memberTokenKey;
+    private String emailTokenKey;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Autowired
     private ServerConfigRepository serverConfigRepository;
 
     @PostConstruct
     private void setting() {
-        ServerConfig jwtKey = serverConfigRepository.findServerConfigByName("jwt_key");
+        ServerConfig jwtMemberKey = serverConfigRepository.findServerConfigByName("jwt_member_key");
+        ServerConfig jwtEmailKey = serverConfigRepository.findServerConfigByName("jwt_email_key");
 
-        if (jwtKey == null) {
-            key = "bamdule";
-//            throw new RuntimeException("jwt key is empty !!");
+        if (jwtMemberKey != null) {
+            this.memberTokenKey = jwtMemberKey.getValue();
         } else {
-            key = jwtKey.getValue();
+            this.memberTokenKey = "testMemberKey";
         }
+        if (jwtEmailKey != null) {
+            this.emailTokenKey = jwtEmailKey.getValue();
+        } else {
+            this.emailTokenKey = "testEmailKey";
+        }
+
     }
 
-    public String createToken(Map<String, Object> data) {
+    public String createMemberToken(MemberPayload memberPayload) {
+        Map data = objectMapper.convertValue(memberPayload, Map.class);
+        return createToken(data, memberTokenKey);
+    }
+
+    public String createEmailToken(EmailPayload emailPayload) {
+        Map data = objectMapper.convertValue(emailPayload, Map.class);
+        return createToken(data, emailTokenKey);
+    }
+
+
+    public MemberPayload verifyMemberJWT(String jwt) {
+        Map<String, Object> tokenData = verifyJWT(jwt, memberTokenKey);
+        return objectMapper.convertValue(tokenData, MemberPayload.class);
+    }
+
+    public EmailPayload verifyEmailJWT(String jwt) {
+        Map<String, Object> tokenData = verifyJWT(jwt, emailTokenKey);
+        return objectMapper.convertValue(tokenData, EmailPayload.class);
+    }
+
+
+    //토큰 생성
+    private String createToken(Map<String, Object> data, String key) {
 
         //Header 부분 설정
         Map<String, Object> headers = new IdentityHashMap<>();
@@ -49,7 +85,7 @@ public class JWTUtils {
         Map<String, Object> payloads = data;
 
 
-        Long expiredTime = 1000 * 60L * 5L; // 토큰 유효 시간 (2시간)
+        Long expiredTime = 1000 * 60L * 5L; //
 //        Long expiredTime = 1000 * 60L;
 
         Date ext = new Date(); // 토큰 만료 시간
@@ -58,8 +94,8 @@ public class JWTUtils {
         // 토큰 Builder
         String jwt = Jwts.builder()
                 .setHeader(headers) // Headers 설정
+                .setSubject("token")
                 .setClaims(payloads) // Claims 설정
-                .setSubject("member") // 토큰 용도
                 .setExpiration(ext) // 토큰 만료 시간 설정
                 .signWith(SignatureAlgorithm.HS256, key.getBytes()) // HS256과 Key로 Sign
                 .compact(); // 토큰 생성
@@ -68,7 +104,8 @@ public class JWTUtils {
     }
 
     //토큰 검증
-    public Map<String, Object> verifyJWT(String jwt) {
+    private Map<String, Object> verifyJWT(String jwt, String key) {
+
         Map<String, Object> claimMap = null;
         try {
             Claims claims = Jwts.parser()
@@ -81,7 +118,7 @@ public class JWTUtils {
         } catch (ExpiredJwtException e) { // 토큰이 만료되었을 경우
             throw new CustomException(ExceptionCode.TOKEN_EXPIRATION, e);
         } catch (Exception e) {
-            throw new CustomException(ExceptionCode.INVALID_TOKEN);
+            throw new CustomException(ExceptionCode.INVALID_TOKEN, e);
         }
 
         return claimMap;

@@ -25,6 +25,9 @@ public class Member {
     @Column(nullable = false, unique = true, updatable = false)
     private String phone;
 
+    @Column(updatable = false)
+    private String email;
+
     @JsonIgnore
     @Column(nullable = false, updatable = false)
     private String password;

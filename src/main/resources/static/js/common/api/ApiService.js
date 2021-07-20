@@ -58,6 +58,42 @@ class ApiService {
         });
     }
 
+    signUpMember(member) {
+        return new Promise(function (resolve, reject) {
+            $.ajax({
+                url: `/api/member`,
+                type: "post",
+                dataType: 'json',
+                contentType: "application/json",
+                data: JSON.stringify(member),
+                success: function (data) {
+                    resolve(data);
+                },
+                error: function (data) {
+                    reject(data);
+                }
+            });
+        });
+    }
+
+    requestEmailCode(email) {
+        return new Promise(function (resolve, reject) {
+            $.ajax({
+                url: `/api/member/email`,
+                type: "post",
+                dataType: 'json',
+                contentType: "application/x-www-form-urlencoded",
+                data: {email},
+                success: function (data) {
+                    resolve(data);
+                },
+                error: function (data) {
+                    reject(data);
+                }
+            });
+        });
+    }
+
     extensionTimeSeat() {
         return new Promise(function (resolve, reject) {
             $.ajax({
