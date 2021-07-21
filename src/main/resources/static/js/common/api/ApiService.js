@@ -170,5 +170,20 @@ class ApiService {
         });
     }
 
-
+    getSeatAvailability(roomId) {
+        return new Promise(function (resolve, reject) {
+            $.ajax({
+                url: `/api/studycafe/seat/availability?roomId=${roomId}`,
+                type: "get",
+                dataType: 'json',
+                contentType: "application/x-www-form-urlencoded",
+                success: function (data) {
+                    resolve(data);
+                },
+                error: function (data) {
+                    reject(data);
+                }
+            });
+        });
+    }
 }

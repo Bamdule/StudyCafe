@@ -2,8 +2,11 @@ package com.bamdule.studycafe.entity.seatusage.repository;
 
 import com.bamdule.studycafe.entity.member.QMember;
 import com.bamdule.studycafe.entity.seat.SeatVO;
+import com.bamdule.studycafe.entity.seatusage.SeatAvailability;
 import com.bamdule.studycafe.entity.seatusage.SeatUsageVO;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -110,5 +113,29 @@ public class SeatUsageRepositoryImpl implements SeatUsageRepositoryCustom {
                 .delete(seatUsage)
                 .where(seatUsage.endDt.loe(now))
                 .execute();
+    }
+
+    @Override
+    public SeatAvailability getSeatAvailability(Integer roomId) {
+        JPAQueryFactory query = new JPAQueryFactory(em);
+
+        NumberExpression<Integer> unusedSeats = new CaseBuilder().when(seatUsage.id.isNull()).then(1).otherwise(0);
+        NumberExpression<Integer> usedSeats = new CaseBuilder().when(seatUsage.id.isNotNull()).then(1).otherwise(0);
+        NumberExpression<Integer> limitedSeats = new CaseBuilder().when(seat.active.isFalse()).then(1).otherwise(0);
+
+        return query
+                .select(Projections.bean(
+                        SeatAvailability.class,
+                        unusedSeats.sum().as("unusedSeats"),
+                        usedSeats.sum().as("usedSeats"),
+                        limitedSeats.sum().as("limitedSeats")
+
+                ))
+                .from(seat)
+                .leftJoin(seatUsage).on(seatUsage.seat.id.eq(seat.id))
+                .where(seat.room.id.eq(roomId))
+                .groupBy(seat.room.id)
+                .fetchOne()
+                ;
     }
 }

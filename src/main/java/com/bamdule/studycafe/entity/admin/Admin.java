@@ -20,7 +20,7 @@ public class Admin {
 
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "admin_role_id")
     private AdminRole adminRole;
 }

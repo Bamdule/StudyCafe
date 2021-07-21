@@ -1,5 +1,7 @@
 package com.bamdule.studycafe.controller;
 
+import com.bamdule.studycafe.entity.seatusage.SeatAvailability;
+import com.bamdule.studycafe.entity.seatusage.service.SeatUsageService;
 import com.bamdule.studycafe.jwt.JWTUtils;
 import com.bamdule.studycafe.config.StudyCafeConfig;
 import com.bamdule.studycafe.entity.seatusage.SeatUsageVO;
@@ -25,6 +27,9 @@ public class StudyCafeController {
 
     @Autowired
     private WebSocketHandler webSocketHandler;
+
+    @Autowired
+    private SeatUsageService seatUsageService;
 
     @Autowired
     private JWTUtils jwtUtils;
@@ -72,12 +77,20 @@ public class StudyCafeController {
     }
 
     //좌석 시간 연장
+    @GetMapping(value = "/seat/availability")
+    public ResponseEntity<SeatAvailability> getSeatAvailability(Integer roomId) {
+        SeatAvailability seatAvailability = seatUsageService.getSeatAvailability(roomId);
+        return ResponseEntity.ok(seatAvailability);
+    }
+
+    //좌석 시간 연장
     @PutMapping(value = "/seat")
     public ResponseEntity updateSeatUsage(@RequestHeader Map<String, Object> requestHeader) {
         Integer memberId = getMemberPayload(requestHeader).getMemberId();
         SeatUsageVO seatUsageVO = studyCafeService.updateSeatUsage(memberId);
         return ResponseEntity.ok(seatUsageVO);
     }
+
 
     //내 좌석 정보
     @GetMapping(value = "/myseat")

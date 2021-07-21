@@ -1,30 +1,34 @@
-class SeatManager {
+class SeatMaker {
     constructor(config) {
         this.config = config;
         this.seats = {};
+        this.currentNumber = 1;
+        this.seatNumbers = {};
 
         this.init();
-        this.status = {
 
-            "USED": {
-                backgroundColor: "beige",
-                code: "USED"
-            },
-            "UNUSED": {
-                backgroundColor: "white",
-                code: "UNUSED"
-            },
-            "LIMIT": {
-                backgroundColor: "lightgray",
-                code: "LIMIT"
-            },
-        };
         this.type = {
-            EXPIRED_SEAT: "EXPIRED_SEAT", EXIT_SEAT: "EXIT_SEAT", USE_SEAT: "USE_SEAT"
+            LIMIT: "LIMIT", SEAT: "SEAT", BLANK: "BLANK"
         }
     }
 
-    init() {
+    seat = {
+        id: "",
+        number: "",
+        roomId: "",
+        row: "",
+        column: "",
+        active: ""
+    }
+
+    init(param) {
+        let {seats = [], width = 0, height = 0} = param;
+
+        if (seats.length > 0) {
+
+        } else {
+
+        }
     }
 
     createSeats(room, seats) {
@@ -36,13 +40,13 @@ class SeatManager {
             return;
         }
 
-        let {row = room.height, column = room.width, seatBaseDiv} = this.config;
+        let {width = 50, height = 50, row = room.width, column = room.height, seatBaseDiv} = this.config;
 
 
         seatBaseDiv.css({
             "display": "grid",
-            "grid-template-columns": `repeat(${column}, 50px)`,
-            "grid-template-rows": `repeat(${row}, 50px)`,
+            "grid-template-columns": `repeat(${column}, ${width}px)`,
+            "grid-template-rows": `repeat(${row}, ${height}px)`,
             "gap": "5px 5px"
         });
 
@@ -51,8 +55,8 @@ class SeatManager {
             seatDivs[`${seat.row}${seat.col}`] = this.createSeat(seat);
         }
 
-        for (let w = 0; w < row; w++) {
-            for (let h = 0; h < column; h++) {
+        for (let w = 0; w < room.width; w++) {
+            for (let h = 0; h < room.height; h++) {
 
                 let seatDiv = seatDivs[`${w}${h}`];
 
@@ -79,7 +83,7 @@ class SeatManager {
 
         let css = {
             "border": "gray solid 1px",
-            "backgroundColor": this.status[seat.status].backgroundColor,
+            // "backgroundColor": this.status[seat.status].backgroundColor,
             cursor: "pointer",
             "user-select": "none",
             "display": "flex",
@@ -124,5 +128,15 @@ class SeatManager {
                 this.updateSeatInfo(message.seatId, this.status.UNUSED);
                 break;
         }
+    }
+
+    getNextNumber() {
+        for (let number in this.seatNumbers) {
+            if (this.seatNumbers[number] === 0) {
+                return number;
+            }
+        }
+        this.seatNumbers[this.currentNumber] = 1;
+        return this.currentNumber++;
     }
 }

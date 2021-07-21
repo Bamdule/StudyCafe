@@ -5,15 +5,20 @@ $(document).ready(function () {
     let jwtUtils = new JwtUtils();
     let apiService = new ApiService();
 
+    let currentRoom = null;
+
     apiService.getRooms()
         .then(function (rooms) {
             console.log(rooms);
             let room = rooms[0];
+            currentRoom = rooms[0];
             apiService.getSeats(room.id)
                 .then(function (seats) {
                     seatManager.createSeats(room, seats);
                     websocket.connect();
                 });
+
+            updateSeatAvailability(currentRoom.id);
         })
         .then();
 
@@ -44,8 +49,23 @@ $(document).ready(function () {
             let data = JSON.parse(message.data);
             seatManager.updateSeat(data);
             console.log(data);
+            updateSeatAvailability(currentRoom.id);
+
         }
     });
+
+    let usedSeats = $("#usedSeats");
+    let unusedSeats = $("#unusedSeats");
+    let limitedSeats = $("#limitedSeats");
+
+    function updateSeatAvailability(roomId) {
+        apiService.getSeatAvailability(roomId)
+            .then(function (data) {
+                usedSeats.text(data.usedSeats);
+                unusedSeats.text(data.unusedSeats);
+                limitedSeats.text(data.limitedSeats);
+            });
+    }
 
     let confirmModal = new ConfirmModal({
         title: "알림",
@@ -73,12 +93,15 @@ $(document).ready(function () {
         onExit: function () {
 
             apiService.exitSeat().then(function () {
+                showToast("퇴실이 완료되었습니다.");
+
                 mySeatModel.close();
             });
 
         },
         onExtension: function () {
             apiService.extensionTimeSeat().then(function () {
+                showToast("시간 연장이 완료되었습니다..");
                 mySeatModel.close();
             });
         }
@@ -106,6 +129,7 @@ $(document).ready(function () {
     let signUpBtn = $("#signUpBtn");
     let mySeatBtn = $("#mySeatBtn");
     let logoutBtn = $("#logoutBtn");
+    let reservationBtn = $("#reservationBtn");
 
     signUpBtn.click(function () {
         signUpModal.show();
@@ -123,6 +147,8 @@ $(document).ready(function () {
                     console.log(data);
                     mySeatModel.showModal(data);
                 })
+        } else {
+            logout();
         }
     });
     logoutBtn.click(function () {
@@ -140,15 +166,18 @@ $(document).ready(function () {
         loginBtn.css("display", "none");
         signUpBtn.css("display", "none");
 
-        mySeatBtn.css("display", "block");
-        logoutBtn.css("display", "block");
+        mySeatBtn.css("display", "flex");
+        logoutBtn.css("display", "flex");
+        reservationBtn.css("display", "flex");
     }
 
     function updateNonMemberUI() {
-        loginBtn.css("display", "block");
-        signUpBtn.css("display", "block");
+        loginBtn.css("display", "flex");
+        signUpBtn.css("display", "flex");
+
         mySeatBtn.css("display", "none");
         logoutBtn.css("display", "none");
+        reservationBtn.css("display", "none");
     }
 
 
@@ -160,6 +189,8 @@ $(document).ready(function () {
                     logout();
                     clearInterval(loginInterval);
                 }
+            } else {
+                clearInterval(loginInterval);
             }
         }, 60000);
     }

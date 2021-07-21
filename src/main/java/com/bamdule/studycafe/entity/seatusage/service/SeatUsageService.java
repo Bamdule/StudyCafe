@@ -1,5 +1,6 @@
 package com.bamdule.studycafe.entity.seatusage.service;
 
+import com.bamdule.studycafe.entity.seatusage.SeatAvailability;
 import com.bamdule.studycafe.entity.seatusage.SeatUsageVO;
 
 import java.time.LocalDateTime;
@@ -17,4 +18,7 @@ public interface SeatUsageService {
     public void deleteExpiredSeatUsages(LocalDateTime now);
 
     public SeatUsageVO getSeatUsageByMemberId(Integer memberId);
+
+    public SeatAvailability getSeatAvailability(Integer roomId);
+
 }

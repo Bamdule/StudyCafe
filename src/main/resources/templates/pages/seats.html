@@ -2,8 +2,10 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>StudyCafe</title>
 
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
 
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
@@ -30,15 +32,88 @@
 
 
     <style>
+        .menu {
+            width: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 15px;
+            cursor: pointer;
+            color: white;
+        }
+        .menu:hover {
+            background-color: #232F21;
+        }
+
+        .seat_info {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            color: black;
+        }
+
+        .seat_color {
+            width: 20px;
+            height: 20px;
+            margin-right: 5px;
+            margin-left: 5px;
+            border: lightgray solid 1px;
+        }
     </style>
 </head>
 <body>
-<div style="width:100%; padding: 10px; display: flex;">
-    <button id="loginBtn">로그인</button>
-    <button id="signUpBtn">회원가입</button>
-    <button id="mySeatBtn">내 좌석 정보</button>
-    <button id="logoutBtn">로그아웃</button>
 
+<!--<div style="height: 30px; width: 100%; background-color: #232f46;">-->
+
+</div>
+<div style="width:100%; height: 48px; display: flex; border-bottom: lightgray solid 1px; background-color: #232f46;">
+    <div style="width: 30%; height: 100%; display: flex;">
+        <div class="menu" style="width: 150px;">
+            Study Cafe
+        </div>
+    </div>
+    <div style="width: 70%; height: 100%; display: flex; justify-content: flex-end;">
+        <div id="loginBtn" class="menu">
+            로그인
+        </div>
+        <div id="signUpBtn" class="menu">
+            회원가입
+        </div>
+        <div id="reservationBtn" class="menu">
+            좌석 예약
+        </div>
+        <div id="mySeatBtn" class="menu">
+            내 좌석 정보
+        </div>
+        <div id="logoutBtn" class="menu">
+            로그아웃
+        </div>
+    </div>
+</div>
+<div style="height: 40px; width: 100%; display: flex; justify-content: flex-end;">
+
+    <div class="seat_info">
+        <span class="seat_color" style="background-color: black;"></span>
+        예약자&nbsp;
+        <span>0</span>명
+    </div>
+
+    <div class="seat_info" style="width: 120px;">
+        <span class="seat_color" style="background-color: white;"></span>
+        빈 좌석&nbsp;
+        <span id="unusedSeats">0</span>개
+    </div>
+    <div class="seat_info" style="width: 130px;">
+        <span class="seat_color" style="background-color: beige; "></span>
+        사용 좌석 &nbsp;
+        <span id="usedSeats">0</span>개
+    </div>
+    <div class="seat_info" style="width: 140px;">
+        <span class="seat_color" style="background-color: gray;"></span>
+        사용불가 좌석 &nbsp;
+        <span id="limitedSeats">0</span>개
+    </div>
 </div>
 <div style="display: flex; justify-content: center;">
     <div id="seatBaseDiv" style="padding: 10px;">

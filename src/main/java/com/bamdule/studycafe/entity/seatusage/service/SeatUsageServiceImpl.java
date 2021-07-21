@@ -4,6 +4,7 @@ import com.bamdule.studycafe.entity.member.Member;
 import com.bamdule.studycafe.entity.member.repository.MemberRepository;
 import com.bamdule.studycafe.entity.seat.Seat;
 import com.bamdule.studycafe.entity.seat.repository.SeatRepository;
+import com.bamdule.studycafe.entity.seatusage.SeatAvailability;
 import com.bamdule.studycafe.entity.seatusage.SeatUsage;
 import com.bamdule.studycafe.entity.seatusage.SeatUsageVO;
 import com.bamdule.studycafe.entity.seatusage.repository.SeatUsageRepository;
@@ -141,6 +142,11 @@ public class SeatUsageServiceImpl implements SeatUsageService {
         } else {
             return optionalSeatUsage.get();
         }
+    }
+
+    @Override
+    public SeatAvailability getSeatAvailability(Integer roomId) {
+        return seatUsageRepository.getSeatAvailability(roomId);
     }
 
     private boolean isExtensionTime(LocalDateTime extensionTime) {

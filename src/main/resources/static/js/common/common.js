@@ -8,9 +8,16 @@ function showToast(message) {
             class: 'purple',
             className: {
                 toast: 'ui message'
-            }
+            },
+            position : "top left"
         });
 }
+
+$(document).ajaxSend(function (e, xhr, options) {
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+    xhr.setRequestHeader(header, token);
+});
 
 $(document).ajaxError(function (event, request, settings) {
     console.log(request);
