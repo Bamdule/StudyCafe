@@ -1,18 +1,24 @@
 package com.bamdule.studycafe.controller;
 
+import com.bamdule.studycafe.entity.room.RoomVO;
+import com.bamdule.studycafe.entity.seat.SeatVO;
 import com.bamdule.studycafe.entity.seatusage.SeatAvailability;
 import com.bamdule.studycafe.entity.seatusage.service.SeatUsageService;
+import com.bamdule.studycafe.entity.studycafe.StudyCafeVO;
 import com.bamdule.studycafe.jwt.JWTUtils;
 import com.bamdule.studycafe.config.StudyCafeConfig;
 import com.bamdule.studycafe.entity.seatusage.SeatUsageVO;
 import com.bamdule.studycafe.entity.studycafe.service.StudyCafeService;
 import com.bamdule.studycafe.jwt.MemberPayload;
+import com.bamdule.studycafe.security.AdminDetails;
 import com.bamdule.studycafe.websocket.MessageType;
 import com.bamdule.studycafe.websocket.WebSocketHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -34,18 +40,24 @@ public class StudyCafeController {
     @Autowired
     private JWTUtils jwtUtils;
 
-    @GetMapping
-    public ResponseEntity findAllStudyCafe() {
-        return ResponseEntity.ok(studyCafeService.findAllStudyCafe());
+//    @GetMapping
+//    public ResponseEntity findAllStudyCafe() {
+//        return ResponseEntity.ok(studyCafeService.findAllStudyCafe());
+//    }
+
+    @GetMapping(value = "")
+    public ResponseEntity<StudyCafeVO> findStudyCafe() {
+        AdminDetails adminDetails = getAuthUserPrincipal();
+        StudyCafeVO studyCafe = adminDetails.getStudyCafe();
+
+        studyCafe.setRooms(studyCafeConfig.getRooms());
+
+        return ResponseEntity.ok(studyCafe);
     }
 
-    @GetMapping(value = "/room")
-    public ResponseEntity findAllRoom() {
-        return ResponseEntity.ok(studyCafeConfig.getRooms());
-    }
 
     @GetMapping(value = "/room/{roomId}")
-    public ResponseEntity findSeatRoom(@PathVariable Integer roomId) {
+    public ResponseEntity<List<SeatVO>> findSeatsByRoomId(@PathVariable Integer roomId) {
 
         if (studyCafeConfig.getRoomMap().get(roomId) == null) {
             return ResponseEntity.badRequest().build();
@@ -55,11 +67,15 @@ public class StudyCafeController {
     }
 
     //좌석 선택
-    @PostMapping(value = "/seat/{seatId}")
-    public ResponseEntity saveSeatUsage(@RequestHeader Map<String, Object> requestHeader, @PathVariable Integer seatId) {
+    @PostMapping(value = "/room/{roomId}/seat/{seatId}")
+    public ResponseEntity saveSeatUsage(@RequestHeader Map<String, Object> requestHeader, @PathVariable Integer roomId, @PathVariable Integer seatId) {
+        if (studyCafeConfig.getRoomMap().get(roomId) == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
         Integer memberId = getMemberPayload(requestHeader).getMemberId();
 
-        SeatUsageVO seatUsageVO = studyCafeService.saveSeatUsage(memberId, seatId);
+        SeatUsageVO seatUsageVO = studyCafeService.saveSeatUsage(memberId, roomId, seatId);
         webSocketHandler.broadcast(MessageType.USE_SEAT, seatUsageVO);
 
         return ResponseEntity.ok(seatUsageVO);
@@ -76,12 +92,6 @@ public class StudyCafeController {
         return ResponseEntity.ok().build();
     }
 
-    //좌석 시간 연장
-    @GetMapping(value = "/seat/availability")
-    public ResponseEntity<SeatAvailability> getSeatAvailability(Integer roomId) {
-        SeatAvailability seatAvailability = seatUsageService.getSeatAvailability(roomId);
-        return ResponseEntity.ok(seatAvailability);
-    }
 
     //좌석 시간 연장
     @PutMapping(value = "/seat")
@@ -90,7 +100,6 @@ public class StudyCafeController {
         SeatUsageVO seatUsageVO = studyCafeService.updateSeatUsage(memberId);
         return ResponseEntity.ok(seatUsageVO);
     }
-
 
     //내 좌석 정보
     @GetMapping(value = "/myseat")
@@ -101,10 +110,19 @@ public class StudyCafeController {
         return ResponseEntity.ok(seatUsageVO);
     }
 
+    //좌석 현황
+    @GetMapping(value = "/seat/availability")
+    public ResponseEntity<SeatAvailability> getSeatAvailability(Integer roomId) {
+        SeatAvailability seatAvailability = seatUsageService.getSeatAvailability(roomId);
+        return ResponseEntity.ok(seatAvailability);
+    }
 
     public MemberPayload getMemberPayload(Map<String, Object> requestHeader) {
         String accessToken = (String) requestHeader.get("authorization");
         return jwtUtils.verifyMemberJWT(accessToken);
     }
 
+    private AdminDetails getAuthUserPrincipal() {
+        return (AdminDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
 }

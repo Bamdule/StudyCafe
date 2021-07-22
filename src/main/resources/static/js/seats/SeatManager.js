@@ -28,6 +28,9 @@ class SeatManager {
     }
 
     createSeats(room, seats) {
+        let {row = room.height, column = room.width, seatBaseDiv} = this.config;
+        seatBaseDiv.empty();
+
         if (seats === undefined) {
             seats = [];
         }
@@ -35,8 +38,6 @@ class SeatManager {
             alert('좌석이 존재하지 않습니다.');
             return;
         }
-
-        let {row = room.height, column = room.width, seatBaseDiv} = this.config;
 
 
         seatBaseDiv.css({

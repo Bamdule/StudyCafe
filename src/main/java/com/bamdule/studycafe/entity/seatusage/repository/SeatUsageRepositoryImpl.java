@@ -119,7 +119,7 @@ public class SeatUsageRepositoryImpl implements SeatUsageRepositoryCustom {
     public SeatAvailability getSeatAvailability(Integer roomId) {
         JPAQueryFactory query = new JPAQueryFactory(em);
 
-        NumberExpression<Integer> unusedSeats = new CaseBuilder().when(seatUsage.id.isNull()).then(1).otherwise(0);
+        NumberExpression<Integer> unusedSeats = new CaseBuilder().when(seatUsage.id.isNull().and(seat.active.isTrue())).then(1).otherwise(0);
         NumberExpression<Integer> usedSeats = new CaseBuilder().when(seatUsage.id.isNotNull()).then(1).otherwise(0);
         NumberExpression<Integer> limitedSeats = new CaseBuilder().when(seat.active.isFalse()).then(1).otherwise(0);
 

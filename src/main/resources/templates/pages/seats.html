@@ -41,6 +41,7 @@
             cursor: pointer;
             color: white;
         }
+
         .menu:hover {
             background-color: #232F21;
         }
@@ -64,12 +65,9 @@
 </head>
 <body>
 
-<!--<div style="height: 30px; width: 100%; background-color: #232f46;">-->
-
-</div>
 <div style="width:100%; height: 48px; display: flex; border-bottom: lightgray solid 1px; background-color: #232f46;">
     <div style="width: 30%; height: 100%; display: flex;">
-        <div class="menu" style="width: 150px;">
+        <div id="studyCafeName" class="menu" style="width: 150px;">
             Study Cafe
         </div>
     </div>
@@ -91,28 +89,36 @@
         </div>
     </div>
 </div>
-<div style="height: 40px; width: 100%; display: flex; justify-content: flex-end;">
+<div style="height: 40px; width: 100%; display: flex;">
 
-    <div class="seat_info">
-        <span class="seat_color" style="background-color: black;"></span>
-        예약자&nbsp;
-        <span>0</span>명
+    <div style="width: 50%; display: flex; justify-content: flex-start;">
+        <div class="ui mini" style="display: flex; justify-content: center;align-items: center; padding: 10px;">
+            <select id="roomSelect" class="ui compact selection dropdown">
+            </select>
+        </div>
     </div>
+    <div style="width: 50%; display: flex; justify-content: flex-end;">
+        <div class="seat_info">
+            <span class="seat_color" style="background-color: black;"></span>
+            예약자&nbsp;
+            <span>0</span>명
+        </div>
 
-    <div class="seat_info" style="width: 120px;">
-        <span class="seat_color" style="background-color: white;"></span>
-        빈 좌석&nbsp;
-        <span id="unusedSeats">0</span>개
-    </div>
-    <div class="seat_info" style="width: 130px;">
-        <span class="seat_color" style="background-color: beige; "></span>
-        사용 좌석 &nbsp;
-        <span id="usedSeats">0</span>개
-    </div>
-    <div class="seat_info" style="width: 140px;">
-        <span class="seat_color" style="background-color: gray;"></span>
-        사용불가 좌석 &nbsp;
-        <span id="limitedSeats">0</span>개
+        <div class="seat_info" style="width: 120px;">
+            <span class="seat_color" style="background-color: white;"></span>
+            빈 좌석&nbsp;
+            <span id="unusedSeats">0</span>개
+        </div>
+        <div class="seat_info" style="width: 130px;">
+            <span class="seat_color" style="background-color: beige; "></span>
+            사용 좌석 &nbsp;
+            <span id="usedSeats">0</span>개
+        </div>
+        <div class="seat_info" style="width: 140px;">
+            <span class="seat_color" style="background-color: gray;"></span>
+            사용불가 좌석 &nbsp;
+            <span id="limitedSeats">0</span>개
+        </div>
     </div>
 </div>
 <div style="display: flex; justify-content: center;">

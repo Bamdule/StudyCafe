@@ -1,6 +1,7 @@
 package com.bamdule.studycafe.entity.admin;
 
 import com.bamdule.studycafe.entity.admin.role.AdminRole;
+import com.bamdule.studycafe.entity.studycafe.StudyCafe;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,4 +24,8 @@ public class Admin {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "admin_role_id")
     private AdminRole adminRole;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "studycafe_id", nullable = false)
+    private StudyCafe studyCafe;
 }

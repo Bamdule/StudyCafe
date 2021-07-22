@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface SeatUsageService {
-    public SeatUsageVO saveSeatUsage(Integer memberId, Integer seatId);
+    public SeatUsageVO saveSeatUsage(Integer memberId, Integer roomId, Integer seatId);
 
     public SeatUsageVO deleteSeatUsage(Integer memberId);
 

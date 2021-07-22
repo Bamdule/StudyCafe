@@ -59,7 +59,7 @@ public class ControllerExceptionHandler {
         Map<String, Object> errors = ErrorsResponse.error(
                 httpStatus.value(),
                 "INTERNAL_SERVER_ERROR",
-                e.getMessage()
+                e.toString()
         );
 
         return ResponseEntity.status(httpStatus).body(errors);

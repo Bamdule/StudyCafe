@@ -24,19 +24,19 @@ public class StudyCafeRepositoryImpl implements StudyCafeRepositoryCustom {
     @Autowired
     private EntityManager em;
 
-    @Override
-    public List<StudyCafeVO> findAllStudyCafe() {
-        JPAQueryFactory query = new JPAQueryFactory(em);
-        return query.select(Projections.bean(
-                StudyCafeVO.class,
-                studyCafe.id,
-                studyCafe.name,
-                studyCafe.address))
-                .from(studyCafe)
-                .fetch()
-                ;
-
-    }
+//    @Override
+//    public List<StudyCafeVO> findAllStudyCafe() {
+//        JPAQueryFactory query = new JPAQueryFactory(em);
+//        return query.select(Projections.bean(
+//                StudyCafeVO.class,
+//                studyCafe.id,
+//                studyCafe.name,
+//                studyCafe.address))
+//                .from(studyCafe)
+//                .fetch()
+//                ;
+//
+//    }
 
     @Override
     public List<RoomVO> findAllRoom(Integer studyCafeId) {
@@ -84,25 +84,25 @@ public class StudyCafeRepositoryImpl implements StudyCafeRepositoryCustom {
                 ;
     }
 
-    @Override
-    public SeatVO checkAvailableSeat(Integer roomId, Integer seatId) {
-        JPAQueryFactory query = new JPAQueryFactory(em);
-
-        return query
-                .select(Projections.bean(
-                        SeatVO.class,
-                        seat.id,
-                        seat.number
-                ))
-                .from(room)
-                .join(seat).on(seat.room.id.eq(roomId))
-                .leftJoin(seatUsage).on(seatUsage.seat.id.eq(seat.id))
-                .where(
-                        room.id.eq(roomId),
-                        seat.id.eq(seatId),
-                        seatUsage.member.id.isNull()
-                )
-                .fetchOne()
-                ;
-    }
+//    @Override
+//    public SeatVO checkAvailableSeat(Integer roomId, Integer seatId) {
+//        JPAQueryFactory query = new JPAQueryFactory(em);
+//
+//        return query
+//                .select(Projections.bean(
+//                        SeatVO.class,
+//                        seat.id,
+//                        seat.number
+//                ))
+//                .from(room)
+//                .join(seat).on(seat.room.id.eq(roomId))
+//                .leftJoin(seatUsage).on(seatUsage.seat.id.eq(seat.id))
+//                .where(
+//                        room.id.eq(roomId),
+//                        seat.id.eq(seatId),
+//                        seatUsage.member.id.isNull()
+//                )
+//                .fetchOne()
+//                ;
+//    }
 }

@@ -13,7 +13,7 @@ import java.util.Map;
 
 @Component
 public class StudyCafeConfig {
-    private Integer studyCafeId = 1;
+    private Integer studyCafeId;
     private Map<Integer, RoomVO> roomMap = new IdentityHashMap<>();
     private List<RoomVO> rooms = new ArrayList<>();
 
@@ -21,13 +21,19 @@ public class StudyCafeConfig {
     @Autowired
     private StudyCafeService studyCafeService;
 
-    @PostConstruct
-    private void initRooms() {
+    public void init(Integer studyCafeId) {
+        this.studyCafeId = studyCafeId;
         this.rooms = studyCafeService.findAllRoom(studyCafeId);
 
         this.rooms.forEach(room -> {
             roomMap.put(room.getId(), room);
         });
+    }
+
+    public void destroy() {
+        this.studyCafeId = null;
+        this.roomMap = new IdentityHashMap<>();
+        this.rooms = new ArrayList<>();
     }
 
     public Integer getStudyCafeId() {

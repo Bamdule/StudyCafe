@@ -7,11 +7,11 @@ import com.bamdule.studycafe.entity.studycafe.StudyCafeVO;
 import java.util.List;
 
 public interface StudyCafeRepositoryCustom {
-    public List<StudyCafeVO> findAllStudyCafe();
+//    public List<StudyCafeVO> findAllStudyCafe();
 
     public List<RoomVO> findAllRoom(Integer studyCafeId);
 
     public List<SeatVO> findAllSeat(Integer roomId);
 
-    public SeatVO checkAvailableSeat(Integer roomId, Integer seatId);
+//    public SeatVO checkAvailableSeat(Integer roomId, Integer seatId);
 }

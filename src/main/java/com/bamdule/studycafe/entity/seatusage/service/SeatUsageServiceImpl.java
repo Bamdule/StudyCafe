@@ -2,6 +2,8 @@ package com.bamdule.studycafe.entity.seatusage.service;
 
 import com.bamdule.studycafe.entity.member.Member;
 import com.bamdule.studycafe.entity.member.repository.MemberRepository;
+import com.bamdule.studycafe.entity.reservation.ReservationVO;
+import com.bamdule.studycafe.entity.reservation.service.ReservationService;
 import com.bamdule.studycafe.entity.seat.Seat;
 import com.bamdule.studycafe.entity.seat.repository.SeatRepository;
 import com.bamdule.studycafe.entity.seatusage.SeatAvailability;
@@ -29,11 +31,35 @@ public class SeatUsageServiceImpl implements SeatUsageService {
     @Autowired
     private SeatRepository seatRepository;
 
+    @Autowired
+    private ReservationService reservationService;
+
     @Override
-    public SeatUsageVO saveSeatUsage(Integer memberId, Integer seatId) {
+    public SeatUsageVO saveSeatUsage(Integer memberId, Integer roomId, Integer seatId) {
+        Optional<ReservationVO> optionalReservation = reservationService.getFirstReservationVO();
+        if (optionalReservation.isPresent()) {
+            ReservationVO reservationVO = optionalReservation.get();
+
+            if (reservationVO.getMemberId().equals(memberId)) {
+                if (reservationVO.getValidDt() != null && reservationVO.getValidDt().isAfter(LocalDateTime.now())) {
+                    reservationService.deleteReservation(memberId);
+                    return save(memberId, roomId, seatId);
+                } else {
+                    throw new CustomException(ExceptionCode.RESERVATION_TIME_EXPIRATION);
+                }
+            } else {
+                throw new CustomException(ExceptionCode.EXIST_RESERVATION_USER);
+            }
+        }
+
+        return save(memberId, roomId, seatId);
+    }
+
+    public SeatUsageVO save(Integer memberId, Integer roomId, Integer seatId) {
+
 
         Optional<Member> optionalMember = memberRepository.findById(memberId);
-        Optional<Seat> optionalSeat = seatRepository.findById(seatId);
+        Optional<Seat> optionalSeat = seatRepository.findSeat(roomId, seatId);
 
         if (optionalMember.isEmpty()) {
             throw new CustomException(ExceptionCode.NOT_FOUND_USER);
@@ -44,7 +70,7 @@ public class SeatUsageServiceImpl implements SeatUsageService {
         }
 
         if (seatUsageRepository.checkAvailableMember(memberId).isPresent()) {
-            throw new CustomException(ExceptionCode.USER_ALREADY_USE);
+            throw new CustomException(ExceptionCode.USER_ALREADY_SEAT_USE);
         }
 
         if (seatUsageRepository.checkAvailableSeat(seatId).isEmpty()) {
@@ -146,7 +172,11 @@ public class SeatUsageServiceImpl implements SeatUsageService {
 
     @Override
     public SeatAvailability getSeatAvailability(Integer roomId) {
-        return seatUsageRepository.getSeatAvailability(roomId);
+        SeatAvailability seatAvailability = seatUsageRepository.getSeatAvailability(roomId);
+        if (seatAvailability == null) {
+            seatAvailability = new SeatAvailability();
+        }
+        return seatAvailability;
     }
 
     private boolean isExtensionTime(LocalDateTime extensionTime) {

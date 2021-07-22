@@ -3,10 +3,10 @@ class ApiService {
     constructor() {
     }
 
-    getRooms() {
+    getStudyCafe() {
         return new Promise(function (resolve, reject) {
             $.ajax({
-                url: `/api/studycafe/room`,
+                url: `/api/studycafe`,
                 type: "get",
                 dataType: 'json',
                 contentType: "application/json",
@@ -130,10 +130,10 @@ class ApiService {
         });
     }
 
-    useSeat(seatId) {
+    useSeat(roomId, seatId) {
         return new Promise(function (resolve, reject) {
             $.ajax({
-                url: `/api/studycafe/seat/${seatId}`,
+                url: `/api/studycafe/room/${roomId}/seat/${seatId}`,
                 type: "post",
                 dataType: 'json',
                 contentType: "application/json",

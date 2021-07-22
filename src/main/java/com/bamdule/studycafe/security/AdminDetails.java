@@ -1,5 +1,6 @@
 package com.bamdule.studycafe.security;
 
+import com.bamdule.studycafe.entity.studycafe.StudyCafeVO;
 import lombok.Builder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,9 +19,10 @@ public class AdminDetails implements UserDetails, Serializable {
     private String username;
     private String password;
 
-    private String adminGroupName;
-
     private Boolean enabled;
+
+    private StudyCafeVO studyCafe;
+
 
     private Collection<? extends GrantedAuthority> authorities;
 
@@ -67,9 +69,11 @@ public class AdminDetails implements UserDetails, Serializable {
         return enabled;
     }
 
-    @Override
-    public String toString() {
-        return "AdminDetails{" + "id=" + id + ", username=" + username + ", password=" + password + ", adminGroupName=" + adminGroupName + ", enabled=" + enabled + ", authorities=" + authorities + '}';
+    public StudyCafeVO getStudyCafe() {
+        return studyCafe;
     }
 
+    public void setStudyCafe(StudyCafeVO studyCafe) {
+        this.studyCafe = studyCafe;
+    }
 }

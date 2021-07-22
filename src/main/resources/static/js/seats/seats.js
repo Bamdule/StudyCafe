@@ -1,26 +1,57 @@
 $(document).ready(function () {
     console.log("hi");
 
+    let roomSelect = $('#roomSelect');
+
 
     let jwtUtils = new JwtUtils();
     let apiService = new ApiService();
-
     let currentRoom = null;
+    let studyCafe = null;
+    let roomInfo = {};
 
-    apiService.getRooms()
-        .then(function (rooms) {
-            console.log(rooms);
-            let room = rooms[0];
-            currentRoom = rooms[0];
-            apiService.getSeats(room.id)
-                .then(function (seats) {
-                    seatManager.createSeats(room, seats);
-                    websocket.connect();
-                });
+    apiService.getStudyCafe()
+        .then(function (cafe) {
+            studyCafe = cafe;
+            $("#studyCafeName").text(cafe.name);
 
-            updateSeatAvailability(currentRoom.id);
+            let rooms = cafe.rooms;
+            let selectValues = [];
+            for (let room of rooms) {
+                roomInfo[room.id] = room;
+
+                selectValues.push({
+                    name: room.name,
+                    value: room.id
+                })
+            }
+            selectValues[0].selected = true;
+
+            initRoomSelect(selectValues);
+            updateSeatsByRoomId(rooms[0]);
+
         })
         .then();
+
+    function initRoomSelect(values) {
+        roomSelect.dropdown({
+            onChange: function (value, text, $selectedItem) {
+                updateSeatsByRoomId(roomInfo[value]);
+            },
+            values: values
+        });
+    }
+
+    function updateSeatsByRoomId(room) {
+        currentRoom = room;
+        apiService.getSeats(room.id)
+            .then(function (seats) {
+                seatManager.createSeats(room, seats);
+                websocket.connect();
+            });
+
+        updateSeatAvailability(currentRoom.id);
+    }
 
 
     let seatManager = new SeatManager({
@@ -33,7 +64,7 @@ $(document).ready(function () {
                     confirmModal.show({
                         message: "정말 좌석을 선택하시겠습니까?",
                         onApprove: function () {
-                            apiService.useSeat(seat.id).then(function () {
+                            apiService.useSeat(currentRoom.id, seat.id).then(function () {
                                 showToast(`${seat.number} 좌석을 선택하셨습니다.`);
                             });
                         }

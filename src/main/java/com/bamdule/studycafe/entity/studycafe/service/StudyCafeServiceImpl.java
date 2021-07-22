@@ -22,11 +22,10 @@ public class StudyCafeServiceImpl implements StudyCafeService {
     @Autowired
     private SeatUsageService seatUsageService;
 
-    @Override
-    public List<StudyCafeVO> findAllStudyCafe() {
-        return studyCafeRepository.findAllStudyCafe();
-
-    }
+//    @Override
+//    public List<StudyCafeVO> findAllStudyCafe() {
+//        return studyCafeRepository.findAllStudyCafe();
+//    }
 
     @Override
     public List<RoomVO> findAllRoom(Integer studyCafeId) {
@@ -39,8 +38,8 @@ public class StudyCafeServiceImpl implements StudyCafeService {
     }
 
     @Override
-    public SeatUsageVO saveSeatUsage(Integer memberId, Integer seatId) {
-        return seatUsageService.saveSeatUsage(memberId, seatId);
+    public SeatUsageVO saveSeatUsage(Integer memberId, Integer roomId, Integer seatId) {
+        return seatUsageService.saveSeatUsage(memberId, roomId, seatId);
     }
 
     @Override

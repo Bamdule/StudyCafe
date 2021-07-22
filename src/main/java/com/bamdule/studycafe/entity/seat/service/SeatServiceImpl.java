@@ -12,8 +12,4 @@ public class SeatServiceImpl implements SeatService {
     @Autowired
     private SeatRepository seatRepository;
 
-    @Override
-    public List<SeatVO> findAllSeatByRoomId(Integer roomId) {
-        return seatRepository.findAllSeatByRoomId(roomId);
-    }
 }

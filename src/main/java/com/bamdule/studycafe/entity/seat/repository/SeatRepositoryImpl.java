@@ -1,10 +1,16 @@
 package com.bamdule.studycafe.entity.seat.repository;
 
+import com.bamdule.studycafe.entity.seat.QSeat;
+import com.bamdule.studycafe.entity.seat.Seat;
 import com.bamdule.studycafe.entity.seat.SeatVO;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
+
+import static com.bamdule.studycafe.entity.seat.QSeat.seat;
 
 public class SeatRepositoryImpl implements SeatRepositoryCustom {
 
@@ -12,28 +18,18 @@ public class SeatRepositoryImpl implements SeatRepositoryCustom {
     private EntityManager em;
 
     @Override
-    public List<SeatVO> findAllSeatByRoomId(Integer roomId) {
-        return null;
-//        JPAQueryFactory query = new JPAQueryFactory(em);
-//
-//        return query
-//                .select(Projections.bean(
-//                        SeatVO.class,
-//                        seat.id,
-//                        seat.number,
-//                        member.id.as("memberId"),
-//                        member.name.as("memberName"),
-//                        seatUsage.startDt,
-//                        seat.status
-//                ))
-//                .from(seat)
-//                .join(seat.room, room)
-//                .leftJoin(seatUsage).on(seatUsage.seat.id.eq(seat.id))
-//                .leftJoin(seatUsage.member, member)
-//                .where(seat.room.id.eq(roomId))
-//                .orderBy(seat.number.asc())
-//                .fetch()
-//                ;
+    public Optional<Seat> findSeat(Integer roomId, Integer seatId) {
+        JPAQueryFactory query = new JPAQueryFactory(em);
+        Seat findSeat = query
+                .select(QSeat.seat)
+                .from(QSeat.seat)
+                .where(
+                        QSeat.seat.room.id.eq(roomId),
+                        QSeat.seat.id.eq(seatId)
+                )
+                .fetchOne();
 
+
+        return Optional.ofNullable(findSeat);
     }
 }
