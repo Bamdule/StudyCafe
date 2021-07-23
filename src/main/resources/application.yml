@@ -7,9 +7,9 @@ spring:
   thymeleaf:
     cache: false
   datasource:
-    url: ENC(ZNVgCDlDyGLAiVuOFyKbuh6k948NL2Oxo/Lxvi1+enSsVsGV8GTtDCRU12qBjYKkM2HkzKhFjjA=)
-    username: ENC(wxKpNxPnLSHl/hjg0l/9qg==)
-    password: ENC(RyRfn8jiIVAd0gfNsDxOzw==)
+    url: ENC("@db.url@")
+    username: ENC("@db.username@")
+    password: ENC("@db.password@")
   jpa:
     open-in-view: false
     properties:
@@ -31,6 +31,9 @@ spring:
           auth : true
           starttls :
             enable : true
+
+logback-dir : @logback.dir@
+logback-level : @logback.level@
 
 jasypt:
   encryptor:

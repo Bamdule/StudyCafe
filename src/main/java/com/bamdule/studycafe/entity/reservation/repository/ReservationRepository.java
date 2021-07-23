@@ -10,4 +10,5 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
     Optional<Reservation> findReservationByMemberId(Integer memberId);
 
     public void deleteReservationByMemberId(Integer memberId);
+
 }

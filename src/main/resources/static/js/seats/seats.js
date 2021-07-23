@@ -29,7 +29,10 @@ $(document).ready(function () {
 
             initRoomSelect(selectValues);
             updateSeatsByRoomId(rooms[0]);
-
+            apiService.getReservation().then(function (res) {
+                updateReservationInfo(res);
+            });
+            websocket.connect();
         })
         .then();
 
@@ -47,7 +50,6 @@ $(document).ready(function () {
         apiService.getSeats(room.id)
             .then(function (seats) {
                 seatManager.createSeats(room, seats);
-                websocket.connect();
             });
 
         updateSeatAvailability(currentRoom.id);
@@ -75,12 +77,22 @@ $(document).ready(function () {
     });
 
     let websocket = new Websocket({
-        serverUri: "http://localhost:8080/websocket",
-        onMessage: function (message) {
-            let data = JSON.parse(message.data);
-            seatManager.updateSeat(data);
-            console.log(data);
-            updateSeatAvailability(currentRoom.id);
+        serverUri: "/websocket",
+        onMessage: function (result) {
+            console.log(result);
+            let data = JSON.parse(result.data);
+            switch (data.type) {
+                case "EXPIRED_SEAT":
+                case "EXIT_SEAT":
+                case "USE_SEAT":
+                    seatManager.updateSeat(data);
+                    updateSeatAvailability(currentRoom.id);
+                    break;
+                case "SAVE_RESERVATION":
+                case "DELETE_RESERVATION":
+                    updateReservationInfo(data.message);
+                    break;
+            }
 
         }
     });
@@ -96,6 +108,12 @@ $(document).ready(function () {
                 unusedSeats.text(data.unusedSeats);
                 limitedSeats.text(data.limitedSeats);
             });
+    }
+
+    let reservationCountText = $("#reservationCountText");
+
+    function updateReservationInfo(reservationCount) {
+        reservationCountText.text(reservationCount);
     }
 
     let confirmModal = new ConfirmModal({
@@ -161,6 +179,15 @@ $(document).ready(function () {
     let mySeatBtn = $("#mySeatBtn");
     let logoutBtn = $("#logoutBtn");
     let reservationBtn = $("#reservationBtn");
+
+    reservationBtn.click(function () {
+        apiService
+            .saveReservation()
+            .then(function () {
+                showToast("예약이 완료되었습니다.");
+            });
+
+    });
 
     signUpBtn.click(function () {
         signUpModal.show();

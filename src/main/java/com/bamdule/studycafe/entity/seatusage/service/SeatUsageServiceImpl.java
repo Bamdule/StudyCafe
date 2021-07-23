@@ -31,33 +31,8 @@ public class SeatUsageServiceImpl implements SeatUsageService {
     @Autowired
     private SeatRepository seatRepository;
 
-    @Autowired
-    private ReservationService reservationService;
-
     @Override
     public SeatUsageVO saveSeatUsage(Integer memberId, Integer roomId, Integer seatId) {
-        Optional<ReservationVO> optionalReservation = reservationService.getFirstReservationVO();
-        if (optionalReservation.isPresent()) {
-            ReservationVO reservationVO = optionalReservation.get();
-
-            if (reservationVO.getMemberId().equals(memberId)) {
-                if (reservationVO.getValidDt() != null && reservationVO.getValidDt().isAfter(LocalDateTime.now())) {
-                    reservationService.deleteReservation(memberId);
-                    return save(memberId, roomId, seatId);
-                } else {
-                    throw new CustomException(ExceptionCode.RESERVATION_TIME_EXPIRATION);
-                }
-            } else {
-                throw new CustomException(ExceptionCode.EXIST_RESERVATION_USER);
-            }
-        }
-
-        return save(memberId, roomId, seatId);
-    }
-
-    public SeatUsageVO save(Integer memberId, Integer roomId, Integer seatId) {
-
-
         Optional<Member> optionalMember = memberRepository.findById(memberId);
         Optional<Seat> optionalSeat = seatRepository.findSeat(roomId, seatId);
 

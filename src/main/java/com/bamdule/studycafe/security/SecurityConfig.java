@@ -39,17 +39,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
 
         http
+
                 .formLogin()
                 .successHandler(customLoginSuccessHandler)
                 .and()
                 .authorizeRequests()
-//                .antMatchers("/login").anonymous()
                 .antMatchers("/**").authenticated();
-
-//        http.formLogin()
-//                .loginPage("/login")
-//                .defaultSuccessUrl("/office")
-//                .failureHandler(new CustomAuthenticationFailureHandler());
 
         http.logout()
                 .logoutUrl("/logout") // default

@@ -7,4 +7,6 @@ import java.util.Optional;
 public interface ReservationRepositoryCustom {
 
     Optional<Reservation> findFirstReservation();
+
+    Long getCountReservation();
 }

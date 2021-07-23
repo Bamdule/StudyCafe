@@ -17,9 +17,11 @@ public interface SeatUsageRepositoryCustom {
     public Optional<SeatVO> checkAvailableMember(Integer memberId);
 
     public List<SeatUsageVO> getExpiredSeatUsages(LocalDateTime now);
-    
+
     public void deleteExpiredSeatUsages(LocalDateTime now);
 
-    SeatAvailability getSeatAvailability(Integer roomId);
+    public SeatAvailability getSeatAvailability(Integer roomId);
+
+    public Long getCountEmptySeatOfStudyCafe(Integer studyCafeId);
 
 }

@@ -178,4 +178,35 @@
         </repository>
     </repositories>
 
+    <profiles>
+        <profile>
+            <id>local</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <db.url>ZNVgCDlDyGLAiVuOFyKbuh6k948NL2Oxo/Lxvi1+enSsVsGV8GTtDCRU12qBjYKkM2HkzKhFjjA=</db.url>
+                <db.username>wxKpNxPnLSHl/hjg0l/9qg==</db.username>
+                <db.password>RyRfn8jiIVAd0gfNsDxOzw==</db.password>
+
+
+                <logback.level>INFO</logback.level>
+                <logback.dir>D://logs/spring-boot/${project.name}</logback.dir>
+
+            </properties>
+        </profile>
+
+        <profile>
+            <id>dev</id>
+            <properties>
+                <db.url>ZNVgCDlDyGLAiVuOFyKbuh6k948NL2Oxo/Lxvi1+enSsVsGV8GTtDCRU12qBjYKkM2HkzKhFjjA=</db.url>
+                <db.username>wxKpNxPnLSHl/hjg0l/9qg==</db.username>
+                <db.password>RyRfn8jiIVAd0gfNsDxOzw==</db.password>
+
+                <logback.level>INFO</logback.level>
+                <logback.dir>logs/${project.name}</logback.dir>
+
+            </properties>
+        </profile>
+    </profiles>
 </project>

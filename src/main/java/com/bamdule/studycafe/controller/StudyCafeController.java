@@ -1,5 +1,7 @@
 package com.bamdule.studycafe.controller;
 
+import com.bamdule.studycafe.entity.reservation.ReservationVO;
+import com.bamdule.studycafe.entity.reservation.service.ReservationService;
 import com.bamdule.studycafe.entity.room.RoomVO;
 import com.bamdule.studycafe.entity.seat.SeatVO;
 import com.bamdule.studycafe.entity.seatusage.SeatAvailability;
@@ -36,6 +38,9 @@ public class StudyCafeController {
 
     @Autowired
     private SeatUsageService seatUsageService;
+
+    @Autowired
+    private ReservationService reservationService;
 
     @Autowired
     private JWTUtils jwtUtils;
@@ -115,6 +120,20 @@ public class StudyCafeController {
     public ResponseEntity<SeatAvailability> getSeatAvailability(Integer roomId) {
         SeatAvailability seatAvailability = seatUsageService.getSeatAvailability(roomId);
         return ResponseEntity.ok(seatAvailability);
+    }
+
+    @PostMapping(value = "/seat/reservation")
+    public ResponseEntity saveReservation(@RequestHeader Map<String, Object> requestHeader) {
+        AdminDetails adminDetails = getAuthUserPrincipal();
+        MemberPayload memberPayload = getMemberPayload(requestHeader);
+        ReservationVO reservationVO = reservationService.saveReservation(adminDetails.getStudyCafe().getId(), memberPayload.getMemberId());
+
+        return ResponseEntity.ok(reservationVO);
+    }
+
+    @GetMapping(value = "/seat/reservation")
+    public ResponseEntity getReservation() {
+        return ResponseEntity.ok(reservationService.getCountReservations());
     }
 
     public MemberPayload getMemberPayload(Map<String, Object> requestHeader) {

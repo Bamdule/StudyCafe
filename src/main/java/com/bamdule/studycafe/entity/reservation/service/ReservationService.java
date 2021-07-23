@@ -9,9 +9,13 @@ public interface ReservationService {
 
     public void executeReservation();
 
-    public void saveReservation(Integer memberId);
+    public ReservationVO saveReservation(Integer studyCafeId, Integer memberId);
 
     public Optional<ReservationVO> getFirstReservationVO();
 
     public void deleteReservation(Integer memberId);
+
+    public boolean checkReservationMember(ReservationVO reservation, Integer memberId);
+
+    public Long getCountReservations();
 }

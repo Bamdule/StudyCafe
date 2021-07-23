@@ -170,6 +170,25 @@ class ApiService {
         });
     }
 
+    saveReservation() {
+        return new Promise(function (resolve, reject) {
+            $.ajax({
+                url: `/api/studycafe/seat/reservation`,
+                type: "post",
+                dataType: 'json',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("authorization", sessionStorage.getItem("scToken"));
+                },
+                success: function (data) {
+                    resolve(data);
+                },
+                error: function (data) {
+                    reject(data);
+                }
+            });
+        });
+    }
+
     getSeatAvailability(roomId) {
         return new Promise(function (resolve, reject) {
             $.ajax({
@@ -177,6 +196,22 @@ class ApiService {
                 type: "get",
                 dataType: 'json',
                 contentType: "application/x-www-form-urlencoded",
+                success: function (data) {
+                    resolve(data);
+                },
+                error: function (data) {
+                    reject(data);
+                }
+            });
+        });
+    }
+
+    getReservation() {
+        return new Promise(function (resolve, reject) {
+            $.ajax({
+                url: `/api/studycafe/seat/reservation`,
+                type: "get",
+                dataType: 'json',
                 success: function (data) {
                     resolve(data);
                 },

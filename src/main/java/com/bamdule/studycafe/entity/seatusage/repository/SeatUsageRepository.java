@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface SeatUsageRepository extends JpaRepository<SeatUsage, Integer>, SeatUsageRepositoryCustom {
     Optional<SeatUsage> findByMemberId(Integer memberId);
+
 }

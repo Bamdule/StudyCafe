@@ -1,6 +1,7 @@
 package com.bamdule.studycafe.entity.seatusage.repository;
 
 import com.bamdule.studycafe.entity.member.QMember;
+import com.bamdule.studycafe.entity.room.QRoom;
 import com.bamdule.studycafe.entity.seat.SeatVO;
 import com.bamdule.studycafe.entity.seatusage.SeatAvailability;
 import com.bamdule.studycafe.entity.seatusage.SeatUsageVO;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.bamdule.studycafe.entity.member.QMember.member;
+import static com.bamdule.studycafe.entity.room.QRoom.*;
 import static com.bamdule.studycafe.entity.seat.QSeat.seat;
 import static com.bamdule.studycafe.entity.seatusage.QSeatUsage.seatUsage;
 
@@ -135,6 +137,24 @@ public class SeatUsageRepositoryImpl implements SeatUsageRepositoryCustom {
                 .leftJoin(seatUsage).on(seatUsage.seat.id.eq(seat.id))
                 .where(seat.room.id.eq(roomId))
                 .groupBy(seat.room.id)
+                .fetchOne()
+                ;
+    }
+
+    @Override
+    public Long getCountEmptySeatOfStudyCafe(Integer studyCafeId) {
+        JPAQueryFactory query = new JPAQueryFactory(em);
+
+        return query
+                .select(seat.id.count())
+                .from(seat)
+                .join(room).on(room.id.eq(seat.room.id))
+                .leftJoin(seatUsage).on(seatUsage.seat.id.eq(seat.id))
+                .where(
+                        seat.active.isTrue(),
+                        seatUsage.id.isNull(),
+                        room.studyCafe.id.eq(studyCafeId)
+                )
                 .fetchOne()
                 ;
     }

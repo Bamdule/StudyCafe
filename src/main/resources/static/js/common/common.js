@@ -9,7 +9,7 @@ function showToast(message) {
             className: {
                 toast: 'ui message'
             },
-            position : "top left"
+            position: "top left"
         });
 }
 
@@ -22,7 +22,10 @@ $(document).ajaxSend(function (e, xhr, options) {
 $(document).ajaxError(function (event, request, settings) {
     console.log(request);
     try {
-        let {message, errors} = request.responseJSON;
+        let {message, errors, status} = request.responseJSON;
+        // if (status === 403) {
+        //     // location.href = "/login";
+        // }
         if (errors !== undefined) {
             for (let error of errors) {
                 showToast(error.message)

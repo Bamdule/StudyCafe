@@ -2,7 +2,6 @@ package com.bamdule.studycafe.entity.reservation;
 
 import lombok.*;
 
-import javax.persistence.Column;
 import java.time.LocalDateTime;
 
 @Getter
@@ -17,4 +16,6 @@ public class ReservationVO {
     private Integer memberId;
 
     private LocalDateTime validDt;
+
+    private Long totalReservation = 0L;
 }

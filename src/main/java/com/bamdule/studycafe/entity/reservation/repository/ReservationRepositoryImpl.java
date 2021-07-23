@@ -26,4 +26,15 @@ public class ReservationRepositoryImpl implements ReservationRepositoryCustom {
 
         return Optional.ofNullable(reservation);
     }
+
+    @Override
+    public Long getCountReservation() {
+        JPAQueryFactory query = new JPAQueryFactory(em);
+
+        return query
+                .select(reservation.count())
+                .from(reservation)
+                .fetchOne()
+                ;
+    }
 }

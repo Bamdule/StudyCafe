@@ -6,23 +6,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping(value = "/studycafe")
+@RequestMapping(value = "/")
 public class PageController {
+//    @GetMapping(value = "/login")
+//    public ModelAndView loginPageView() {
+//        ModelAndView modelAndView = new ModelAndView("page/login");
+//
+//        return modelAndView;
+//    }
 
-    @GetMapping(value = "")
+    @GetMapping(value = "/studycafe")
     public ModelAndView home() {
         ModelAndView mav = new ModelAndView("pages/seats");
         return mav;
     }
-
-//    @GetMapping(value = "/seatMaker/login")
-//    public String seatMakerLogin() {
-//        return "";
-//    }
-//
-//    @GetMapping(value = "/seatMaker/login")
-//    public String seatMakerLogin() {
-//        return "";
-//    }
 
 }
