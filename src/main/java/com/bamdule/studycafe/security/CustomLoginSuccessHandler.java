@@ -31,7 +31,7 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
         logger.info("[security] Login Success");
         AdminDetails adminDetails = (AdminDetails) authentication.getPrincipal();
 
-        studyCafeConfig.init(adminDetails.getStudyCafe().getId());
+        studyCafeConfig.init();
         propertyConfig.setUseSeatSchedule(true);
 
         httpServletResponse.sendRedirect("/studycafe");

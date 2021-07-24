@@ -55,8 +55,11 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public MemberTO saveMember(MemberTO memberTO) {
+        if (memberRepository.findMemberByEmail(memberTO.getEmail()).isPresent()) {
+            throw new CustomException(ExceptionCode.DUPLICATED_EMAIL);
+        }
 
-        if (memberRepository.findMemberByPhone(memberTO.getPhone()) != null) {
+        if (memberRepository.findMemberByPhone(memberTO.getPhone()).isPresent()) {
             throw new CustomException(ExceptionCode.DUPLICATED_PHONE_NUMBER);
         }
 
@@ -92,11 +95,12 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public String loginMember(String phone, String password) {
-        Member member = memberRepository.findMemberByPhone(phone);
+        Optional<Member> optionalMember = memberRepository.findMemberByPhone(phone);
 
-        if (member == null) {
+        if (optionalMember.isEmpty()) {
             throw new CustomException(ExceptionCode.LOGIN_FAILED);
         }
+        Member member = optionalMember.get();
 
         if (!passwordEncoder.matches(password, member.getPassword())) {
             throw new CustomException(ExceptionCode.LOGIN_FAILED);

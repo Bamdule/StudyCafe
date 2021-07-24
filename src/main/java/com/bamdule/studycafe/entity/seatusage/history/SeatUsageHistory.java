@@ -1,8 +1,6 @@
 package com.bamdule.studycafe.entity.seatusage.history;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -11,6 +9,9 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table(
         name = "seat_usage_history",
         indexes = {
@@ -27,12 +28,18 @@ public class SeatUsageHistory {
     @Column(name = "member_id", nullable = false)
     private Integer memberId;
 
-    @Column(name = "product_id", nullable = false)
-    private Integer productId;
-
     @Column(name = "start_dt", nullable = false)
-    LocalDateTime startDt;
+    private LocalDateTime startDt;
 
     @Column(name = "end_dt")
-    LocalDateTime endDt;
+    private LocalDateTime endDt;
+
+    @Column(name = "study_minutes")
+    Long studyMinutes;
+
+    @Column(nullable = false)
+    private String day;
+
+    @Column(nullable = false)
+    private String month;
 }

@@ -25,7 +25,7 @@ public class Member {
     @Column(nullable = false, unique = true, updatable = false)
     private String phone;
 
-    @Column(updatable = false)
+    @Column(updatable = false, unique = true)
     private String email;
 
     @JsonIgnore

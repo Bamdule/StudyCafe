@@ -9,6 +9,10 @@ import com.bamdule.studycafe.entity.seat.repository.SeatRepository;
 import com.bamdule.studycafe.entity.seatusage.SeatAvailability;
 import com.bamdule.studycafe.entity.seatusage.SeatUsage;
 import com.bamdule.studycafe.entity.seatusage.SeatUsageVO;
+import com.bamdule.studycafe.entity.seatusage.history.SeatUsageHistory;
+import com.bamdule.studycafe.entity.seatusage.history.StudyDayVO;
+import com.bamdule.studycafe.entity.seatusage.history.StudyInfoVO;
+import com.bamdule.studycafe.entity.seatusage.repository.SeatUsageHistoryRepository;
 import com.bamdule.studycafe.entity.seatusage.repository.SeatUsageRepository;
 import com.bamdule.studycafe.exception.CustomException;
 import com.bamdule.studycafe.exception.ExceptionCode;
@@ -16,7 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,6 +33,10 @@ public class SeatUsageServiceImpl implements SeatUsageService {
 
     @Autowired
     private SeatUsageRepository seatUsageRepository;
+
+    @Autowired
+    private SeatUsageHistoryRepository seatUsageHistoryRepository;
+
     @Autowired
     private MemberRepository memberRepository;
     @Autowired
@@ -64,6 +75,7 @@ public class SeatUsageServiceImpl implements SeatUsageService {
                     .build();
 
             seatUsageRepository.save(seatUsage);
+            saveSeatUsageHistory(memberId, seatId);
 
             return SeatUsageVO.builder()
                     .id(seatUsage.getId())
@@ -94,6 +106,7 @@ public class SeatUsageServiceImpl implements SeatUsageService {
                     .build();
 
             seatUsageRepository.delete(seatUsage);
+
             return seatUsageVO;
         }
     }
@@ -152,6 +165,53 @@ public class SeatUsageServiceImpl implements SeatUsageService {
             seatAvailability = new SeatAvailability();
         }
         return seatAvailability;
+    }
+
+    @Override
+    public void saveSeatUsageHistory(Integer memberId, Integer seatId) {
+
+        LocalDateTime now = LocalDateTime.now();
+
+        SeatUsageHistory seatUsageHistory = SeatUsageHistory.builder()
+                .seatId(seatId)
+                .memberId(memberId)
+                .startDt(now)
+                .day(now.format(DateTimeFormatter.ofPattern("yyyyMMdd")))
+                .month(now.format(DateTimeFormatter.ofPattern("yyyyMM")))
+                .build();
+
+        seatUsageHistoryRepository.save(seatUsageHistory);
+    }
+
+    @Override
+    public void updateSeatUsageHistoryEndDt(Integer memberId) {
+        Optional<SeatUsageHistory> optionalSeatUsageHistory = seatUsageHistoryRepository.findLastSeatUsageHistory(memberId);
+        if (optionalSeatUsageHistory.isPresent()) {
+            SeatUsageHistory seatUsageHistory = optionalSeatUsageHistory.get();
+
+            if (seatUsageHistory.getEndDt() == null) {
+                seatUsageHistory.setEndDt(LocalDateTime.now());
+
+                Duration duration = Duration.between(seatUsageHistory.getStartDt(), seatUsageHistory.getEndDt());
+                long minutes = duration.getSeconds() / 60;
+                seatUsageHistory.setStudyMinutes(minutes);
+
+                seatUsageHistoryRepository.save(seatUsageHistory);
+            }
+
+        }
+
+    }
+
+    @Override
+    public StudyInfoVO getStudyInfo(LocalDate month, Integer memberId) {
+        String yyyyMM = month.format(DateTimeFormatter.ofPattern("yyyyMM"));
+        List<StudyDayVO> studyDays = seatUsageHistoryRepository.getListStudyDay(yyyyMM, memberId);
+
+        return StudyInfoVO.builder()
+                .month(month.toString())
+                .studyDays(studyDays)
+                .build();
     }
 
     private boolean isExtensionTime(LocalDateTime extensionTime) {

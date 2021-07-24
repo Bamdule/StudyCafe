@@ -3,6 +3,7 @@ package com.bamdule.studycafe.entity.seatusage.repository;
 import com.bamdule.studycafe.entity.seat.SeatVO;
 import com.bamdule.studycafe.entity.seatusage.SeatAvailability;
 import com.bamdule.studycafe.entity.seatusage.SeatUsageVO;
+import com.bamdule.studycafe.entity.seatusage.history.SeatUsageHistory;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,6 +23,7 @@ public interface SeatUsageRepositoryCustom {
 
     public SeatAvailability getSeatAvailability(Integer roomId);
 
-    public Long getCountEmptySeatOfStudyCafe(Integer studyCafeId);
+    public Long getCountAvailableSeat();
+
 
 }

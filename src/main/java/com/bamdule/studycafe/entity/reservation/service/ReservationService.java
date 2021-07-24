@@ -9,7 +9,7 @@ public interface ReservationService {
 
     public void executeReservation();
 
-    public ReservationVO saveReservation(Integer studyCafeId, Integer memberId);
+    public ReservationVO saveReservation(Integer memberId);
 
     public Optional<ReservationVO> getFirstReservationVO();
 

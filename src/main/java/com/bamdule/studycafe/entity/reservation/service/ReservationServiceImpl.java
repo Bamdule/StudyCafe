@@ -48,11 +48,11 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public ReservationVO saveReservation(Integer studyCafeId, Integer memberId) {
+    public ReservationVO saveReservation(Integer memberId) {
 
-//        if (seatUsageRepository.getCountEmptySeatOfStudyCafe(studyCafeId) > 0) {
-//            throw new CustomException(ExceptionCode.EXIST_AVAILABLE_SEATS);
-//        }
+        if (seatUsageRepository.getCountAvailableSeat() > 0) {
+            throw new CustomException(ExceptionCode.EXIST_AVAILABLE_SEATS);
+        }
 
 
         if (reservationRepository.findReservationByMemberId(memberId).isPresent()) {

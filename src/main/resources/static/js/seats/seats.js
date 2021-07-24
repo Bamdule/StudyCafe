@@ -7,13 +7,10 @@ $(document).ready(function () {
     let jwtUtils = new JwtUtils();
     let apiService = new ApiService();
     let currentRoom = null;
-    let studyCafe = null;
     let roomInfo = {};
 
     apiService.getStudyCafe()
         .then(function (cafe) {
-            studyCafe = cafe;
-            $("#studyCafeName").text(cafe.name);
 
             let rooms = cafe.rooms;
             let selectValues = [];
@@ -167,6 +164,7 @@ $(document).ready(function () {
                 });
         },
         requestEmailCodeCallback: function (email) {
+            showToast("이메일 인증 코드 발송이 요청되었습니다. <br/>조금만 기다려주세요.");
             apiService.requestEmailCode(email)
                 .then(function () {
                     showToast("이메일 인증 코드 발송이 완료되었습니다.");

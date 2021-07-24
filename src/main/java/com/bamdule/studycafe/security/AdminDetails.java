@@ -1,13 +1,11 @@
 package com.bamdule.studycafe.security;
 
-import com.bamdule.studycafe.entity.studycafe.StudyCafeVO;
 import lombok.Builder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * @author MW
@@ -20,9 +18,6 @@ public class AdminDetails implements UserDetails, Serializable {
     private String password;
 
     private Boolean enabled;
-
-    private StudyCafeVO studyCafe;
-
 
     private Collection<? extends GrantedAuthority> authorities;
 
@@ -69,11 +64,4 @@ public class AdminDetails implements UserDetails, Serializable {
         return enabled;
     }
 
-    public StudyCafeVO getStudyCafe() {
-        return studyCafe;
-    }
-
-    public void setStudyCafe(StudyCafeVO studyCafe) {
-        this.studyCafe = studyCafe;
-    }
 }

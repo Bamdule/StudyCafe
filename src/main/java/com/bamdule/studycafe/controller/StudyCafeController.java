@@ -2,11 +2,11 @@ package com.bamdule.studycafe.controller;
 
 import com.bamdule.studycafe.entity.reservation.ReservationVO;
 import com.bamdule.studycafe.entity.reservation.service.ReservationService;
-import com.bamdule.studycafe.entity.room.RoomVO;
 import com.bamdule.studycafe.entity.seat.SeatVO;
+import com.bamdule.studycafe.entity.seat.service.SeatService;
 import com.bamdule.studycafe.entity.seatusage.SeatAvailability;
 import com.bamdule.studycafe.entity.seatusage.service.SeatUsageService;
-import com.bamdule.studycafe.entity.studycafe.StudyCafeVO;
+import com.bamdule.studycafe.entity.studycafe.VO.StudyCafeVO;
 import com.bamdule.studycafe.jwt.JWTUtils;
 import com.bamdule.studycafe.config.StudyCafeConfig;
 import com.bamdule.studycafe.entity.seatusage.SeatUsageVO;
@@ -15,11 +15,14 @@ import com.bamdule.studycafe.jwt.MemberPayload;
 import com.bamdule.studycafe.security.AdminDetails;
 import com.bamdule.studycafe.websocket.MessageType;
 import com.bamdule.studycafe.websocket.WebSocketHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -37,6 +40,9 @@ public class StudyCafeController {
     private WebSocketHandler webSocketHandler;
 
     @Autowired
+    private SeatService seatService;
+
+    @Autowired
     private SeatUsageService seatUsageService;
 
     @Autowired
@@ -45,15 +51,14 @@ public class StudyCafeController {
     @Autowired
     private JWTUtils jwtUtils;
 
-//    @GetMapping
-//    public ResponseEntity findAllStudyCafe() {
-//        return ResponseEntity.ok(studyCafeService.findAllStudyCafe());
-//    }
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
 
     @GetMapping(value = "")
     public ResponseEntity<StudyCafeVO> findStudyCafe() {
-        AdminDetails adminDetails = getAuthUserPrincipal();
-        StudyCafeVO studyCafe = adminDetails.getStudyCafe();
+        StudyCafeVO studyCafe = StudyCafeVO.builder()
+                .rooms(studyCafeConfig.getRooms())
+                .build();
 
         studyCafe.setRooms(studyCafeConfig.getRooms());
 
@@ -68,7 +73,7 @@ public class StudyCafeController {
             return ResponseEntity.badRequest().build();
         }
 
-        return ResponseEntity.ok(studyCafeService.findAllSeat(roomId));
+        return ResponseEntity.ok(seatService.findAllSeat(roomId));
     }
 
     //좌석 선택
@@ -93,6 +98,7 @@ public class StudyCafeController {
 
         SeatUsageVO seatUsageVO = studyCafeService.deleteSeatUsage(memberId);
         webSocketHandler.broadcast(MessageType.EXIT_SEAT, seatUsageVO);
+        seatUsageService.updateSeatUsageHistoryEndDt(memberId);
 
         return ResponseEntity.ok().build();
     }
@@ -112,6 +118,9 @@ public class StudyCafeController {
         Integer memberId = getMemberPayload(requestHeader).getMemberId();
 
         SeatUsageVO seatUsageVO = studyCafeService.getSeatUsageByMemberId(memberId);
+
+        seatUsageService.getStudyInfo(LocalDate.now(), memberId).getStudyDays().forEach(studyDay -> logger.info("[MYTEST] studyDay : {}", studyDay));
+        ;
         return ResponseEntity.ok(seatUsageVO);
     }
 
@@ -124,9 +133,8 @@ public class StudyCafeController {
 
     @PostMapping(value = "/seat/reservation")
     public ResponseEntity saveReservation(@RequestHeader Map<String, Object> requestHeader) {
-        AdminDetails adminDetails = getAuthUserPrincipal();
         MemberPayload memberPayload = getMemberPayload(requestHeader);
-        ReservationVO reservationVO = reservationService.saveReservation(adminDetails.getStudyCafe().getId(), memberPayload.getMemberId());
+        ReservationVO reservationVO = reservationService.saveReservation(memberPayload.getMemberId());
 
         return ResponseEntity.ok(reservationVO);
     }

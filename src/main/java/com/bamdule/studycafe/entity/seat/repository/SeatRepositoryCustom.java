@@ -10,4 +10,5 @@ public interface SeatRepositoryCustom {
 
     public Optional<Seat> findSeat(Integer roomId, Integer seatId);
 
+    public List<SeatVO> findAllSeat(Integer roomId);
 }

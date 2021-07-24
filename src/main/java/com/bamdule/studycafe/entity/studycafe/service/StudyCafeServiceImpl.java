@@ -4,12 +4,8 @@ import com.bamdule.studycafe.entity.reservation.ReservationVO;
 import com.bamdule.studycafe.entity.reservation.service.ReservationService;
 import com.bamdule.studycafe.entity.room.RoomVO;
 import com.bamdule.studycafe.entity.seat.SeatVO;
-import com.bamdule.studycafe.entity.seatusage.SeatUsageTO;
 import com.bamdule.studycafe.entity.seatusage.SeatUsageVO;
-import com.bamdule.studycafe.entity.seatusage.repository.SeatUsageRepository;
 import com.bamdule.studycafe.entity.seatusage.service.SeatUsageService;
-import com.bamdule.studycafe.entity.studycafe.StudyCafeVO;
-import com.bamdule.studycafe.entity.studycafe.repository.StudyCafeRepository;
 import com.bamdule.studycafe.exception.CustomException;
 import com.bamdule.studycafe.exception.ExceptionCode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +17,6 @@ import java.util.Optional;
 @Service
 public class StudyCafeServiceImpl implements StudyCafeService {
 
-    @Autowired
-    private StudyCafeRepository studyCafeRepository;
 
     @Autowired
     private SeatUsageService seatUsageService;
@@ -35,15 +29,15 @@ public class StudyCafeServiceImpl implements StudyCafeService {
 //        return studyCafeRepository.findAllStudyCafe();
 //    }
 
-    @Override
-    public List<RoomVO> findAllRoom(Integer studyCafeId) {
-        return studyCafeRepository.findAllRoom(studyCafeId);
-    }
-
-    @Override
-    public List<SeatVO> findAllSeat(Integer roomId) {
-        return studyCafeRepository.findAllSeat(roomId);
-    }
+//    @Override
+//    public List<RoomVO> findAllRoom(Integer studyCafeId) {
+//        return studyCafeRepository.findAllRoom(studyCafeId);
+//    }
+//
+//    @Override
+//    public List<SeatVO> findAllSeat(Integer roomId) {
+//        return studyCafeRepository.findAllSeat(roomId);
+//    }
 
     @Override
     public SeatUsageVO saveSeatUsage(Integer memberId, Integer roomId, Integer seatId) {

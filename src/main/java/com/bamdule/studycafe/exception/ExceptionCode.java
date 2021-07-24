@@ -25,8 +25,10 @@ public enum ExceptionCode {
     NOT_FOUND_USER_IN_USE(HttpStatus.NOT_FOUND, "NOT_FOUND_USER_IN_USE", "좌석을 사용하고 있는 유저를 찾을 수 없습니다."),
     NOT_FOUND_SEAT(HttpStatus.NOT_FOUND, "NOT_FOUND_SEAT", "존재하지 않는 좌석입니다."),
     EXIST_RESERVATION_USER(HttpStatus.BAD_REQUEST, "EXIST_RESERVATION_USER", "예약자가 있어서 좌석을 선택할 수 없습니다."),
-    EXIST_AVAILABLE_SEATS(HttpStatus.BAD_REQUEST,"EXIST_AVAILABLE_SEATS","사용 가능한 좌석이 있어서 예약할 수 없습니다."),
+    EXIST_AVAILABLE_SEATS(HttpStatus.BAD_REQUEST, "EXIST_AVAILABLE_SEATS", "사용 가능한 좌석이 있어서 예약할 수 없습니다."),
     DUPLICATED_PHONE_NUMBER(HttpStatus.BAD_REQUEST, "DUPLICATED_PHONE_NUMBER", "이미 가입한 휴대폰 번호입니다."),
+    DUPLICATED_EMAIL(HttpStatus.BAD_REQUEST, "DUPLICATED_EMAIL", "이미 가입한 이메일 주소입니다."),
+
 
     ;
 

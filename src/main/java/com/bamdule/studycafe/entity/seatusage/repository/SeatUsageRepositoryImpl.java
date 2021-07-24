@@ -5,6 +5,8 @@ import com.bamdule.studycafe.entity.room.QRoom;
 import com.bamdule.studycafe.entity.seat.SeatVO;
 import com.bamdule.studycafe.entity.seatusage.SeatAvailability;
 import com.bamdule.studycafe.entity.seatusage.SeatUsageVO;
+import com.bamdule.studycafe.entity.seatusage.history.QSeatUsageHistory;
+import com.bamdule.studycafe.entity.seatusage.history.SeatUsageHistory;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.NumberExpression;
@@ -21,6 +23,7 @@ import static com.bamdule.studycafe.entity.member.QMember.member;
 import static com.bamdule.studycafe.entity.room.QRoom.*;
 import static com.bamdule.studycafe.entity.seat.QSeat.seat;
 import static com.bamdule.studycafe.entity.seatusage.QSeatUsage.seatUsage;
+import static com.bamdule.studycafe.entity.seatusage.history.QSeatUsageHistory.seatUsageHistory;
 
 public class SeatUsageRepositoryImpl implements SeatUsageRepositoryCustom {
 
@@ -142,7 +145,7 @@ public class SeatUsageRepositoryImpl implements SeatUsageRepositoryCustom {
     }
 
     @Override
-    public Long getCountEmptySeatOfStudyCafe(Integer studyCafeId) {
+    public Long getCountAvailableSeat() {
         JPAQueryFactory query = new JPAQueryFactory(em);
 
         return query
@@ -152,10 +155,10 @@ public class SeatUsageRepositoryImpl implements SeatUsageRepositoryCustom {
                 .leftJoin(seatUsage).on(seatUsage.seat.id.eq(seat.id))
                 .where(
                         seat.active.isTrue(),
-                        seatUsage.id.isNull(),
-                        room.studyCafe.id.eq(studyCafeId)
+                        seatUsage.id.isNull()
                 )
                 .fetchOne()
                 ;
     }
+
 }

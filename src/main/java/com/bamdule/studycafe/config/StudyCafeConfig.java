@@ -1,6 +1,7 @@
 package com.bamdule.studycafe.config;
 
 import com.bamdule.studycafe.entity.room.RoomVO;
+import com.bamdule.studycafe.entity.room.service.RoomService;
 import com.bamdule.studycafe.entity.studycafe.service.StudyCafeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,17 +14,14 @@ import java.util.Map;
 
 @Component
 public class StudyCafeConfig {
-    private Integer studyCafeId;
     private Map<Integer, RoomVO> roomMap = new IdentityHashMap<>();
     private List<RoomVO> rooms = new ArrayList<>();
 
-
     @Autowired
-    private StudyCafeService studyCafeService;
+    private RoomService roomService;
 
-    public void init(Integer studyCafeId) {
-        this.studyCafeId = studyCafeId;
-        this.rooms = studyCafeService.findAllRoom(studyCafeId);
+    public void init() {
+        this.rooms = roomService.getAllListRoom();
 
         this.rooms.forEach(room -> {
             roomMap.put(room.getId(), room);
@@ -31,13 +29,8 @@ public class StudyCafeConfig {
     }
 
     public void destroy() {
-        this.studyCafeId = null;
         this.roomMap = new IdentityHashMap<>();
         this.rooms = new ArrayList<>();
-    }
-
-    public Integer getStudyCafeId() {
-        return studyCafeId;
     }
 
     public Map<Integer, RoomVO> getRoomMap() {

@@ -7,7 +7,6 @@ package com.bamdule.studycafe.security;
 
 import com.bamdule.studycafe.entity.admin.Admin;
 import com.bamdule.studycafe.entity.admin.repository.AdminRepository;
-import com.bamdule.studycafe.entity.studycafe.StudyCafeVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,17 +62,12 @@ public class AdminProvider implements AuthenticationProvider {
             authorities.add(new SimpleGrantedAuthority(admin.getAdminRole().getName()));
         }
 
-        StudyCafeVO studyCafeVO = StudyCafeVO.builder()
-                .id(admin.getStudyCafe().getId())
-                .name(admin.getStudyCafe().getName())
-                .address(admin.getStudyCafe().getAddress())
-                .build();
+
 
         AdminDetails adminDetails = AdminDetails.builder()
                 .id(admin.getId())
                 .username(account)
                 .authorities(authorities)
-                .studyCafe(studyCafeVO)
                 .build();
         
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(adminDetails, passwordEncoder.encode(password), authorities);
