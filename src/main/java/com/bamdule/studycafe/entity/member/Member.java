@@ -35,5 +35,8 @@ public class Member {
     @Column(name = "join_dt", updatable = false)
     private LocalDateTime joinDt;
 
+    @Column(name = "target_study_hour")
+    private Integer targetStudyHour;
+
 
 }

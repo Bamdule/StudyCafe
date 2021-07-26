@@ -40,8 +40,8 @@ public class SeatUsageRepositoryImpl implements SeatUsageRepositoryCustom {
                         seatUsage.id,
                         seatUsage.seat.id.as("seatId"),
                         seatUsage.seat.number,
-                        seatUsage.member.id.as("memberId"),
-                        seatUsage.member.name.as("memberName"),
+//                        seatUsage.member.id.as("memberId"),
+//                        seatUsage.member.name.as("memberName"),
                         seatUsage.startDt,
                         seatUsage.endDt
                 ))

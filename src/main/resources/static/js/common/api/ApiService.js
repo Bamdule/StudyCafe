@@ -170,6 +170,27 @@ class ApiService {
         });
     }
 
+    getAllInfo() {
+        return new Promise(function (resolve, reject) {
+            $.ajax({
+                url: `/api/studycafe/allInfo`,
+                type: "get",
+                dataType: 'json',
+                contentType: "application/x-www-form-urlencoded",
+                data: {studyMonth: "2021-07-01"},
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("authorization", sessionStorage.getItem("scToken"));
+                },
+                success: function (data) {
+                    resolve(data);
+                },
+                error: function (data) {
+                    reject(data);
+                }
+            });
+        });
+    }
+
     saveReservation() {
         return new Promise(function (resolve, reject) {
             $.ajax({

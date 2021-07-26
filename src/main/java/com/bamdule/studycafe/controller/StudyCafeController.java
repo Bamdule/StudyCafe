@@ -124,6 +124,13 @@ public class StudyCafeController {
         return ResponseEntity.ok(seatUsageVO);
     }
 
+    //내 좌석 정보
+    @GetMapping(value = "/allInfo")
+    public ResponseEntity getAllInfo(@RequestHeader Map<String, Object> requestHeader, String studyMonth) {
+        Integer memberId = getMemberPayload(requestHeader).getMemberId();
+        return ResponseEntity.ok(studyCafeService.getAllInfo(memberId, studyMonth));
+    }
+
     //좌석 현황
     @GetMapping(value = "/seat/availability")
     public ResponseEntity<SeatAvailability> getSeatAvailability(Integer roomId) {

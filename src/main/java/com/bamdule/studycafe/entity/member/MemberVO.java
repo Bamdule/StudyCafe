@@ -1,5 +1,6 @@
 package com.bamdule.studycafe.entity.member;
 
+import com.bamdule.studycafe.common.DateUtils;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,17 +17,15 @@ public class MemberVO {
 
     private String name;
 
+    private String email;
+
     private String phone;
 
-    private Integer remainingTime;
+    private LocalDateTime joinDt;
 
-    private Integer AvailableDays;
+    private Integer targetStudyHour;
 
-    private Integer productId;
-
-    private String productName;
-
-    private LocalDateTime paymentDt;
-
-    private LocalDateTime lastUsedDt;
+    public String getJoinDtText() {
+        return DateUtils.localDateTimeToString(this.joinDt);
+    }
 }

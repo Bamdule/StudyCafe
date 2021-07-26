@@ -1,5 +1,7 @@
 package com.bamdule.studycafe.entity.studycafe.service;
 
+import com.bamdule.studycafe.entity.member.AllInfoVO;
+import com.bamdule.studycafe.entity.member.service.MemberService;
 import com.bamdule.studycafe.entity.reservation.ReservationVO;
 import com.bamdule.studycafe.entity.reservation.service.ReservationService;
 import com.bamdule.studycafe.entity.room.RoomVO;
@@ -11,6 +13,8 @@ import com.bamdule.studycafe.exception.ExceptionCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,20 +28,8 @@ public class StudyCafeServiceImpl implements StudyCafeService {
     @Autowired
     private ReservationService reservationService;
 
-//    @Override
-//    public List<StudyCafeVO> findAllStudyCafe() {
-//        return studyCafeRepository.findAllStudyCafe();
-//    }
-
-//    @Override
-//    public List<RoomVO> findAllRoom(Integer studyCafeId) {
-//        return studyCafeRepository.findAllRoom(studyCafeId);
-//    }
-//
-//    @Override
-//    public List<SeatVO> findAllSeat(Integer roomId) {
-//        return studyCafeRepository.findAllSeat(roomId);
-//    }
+    @Autowired
+    private MemberService memberService;
 
     @Override
     public SeatUsageVO saveSeatUsage(Integer memberId, Integer roomId, Integer seatId) {
@@ -71,5 +63,18 @@ public class StudyCafeServiceImpl implements StudyCafeService {
     @Override
     public SeatUsageVO getSeatUsageByMemberId(Integer memberId) {
         return seatUsageService.getSeatUsageByMemberId(memberId);
+    }
+
+    @Override
+    public AllInfoVO getAllInfo(Integer memberId, String studyMonth) {
+
+        return AllInfoVO.builder()
+                .seatUsage(seatUsageService.getSeatUsageByMemberId(memberId))
+                .studyInfo(seatUsageService.getStudyInfo(
+                        LocalDate.parse(studyMonth, DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                        memberId
+                ))
+                .member(memberService.getMemberById(memberId))
+                .build();
     }
 }

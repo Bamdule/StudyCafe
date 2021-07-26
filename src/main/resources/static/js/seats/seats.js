@@ -137,7 +137,6 @@ $(document).ready(function () {
     let mySeatModel = new MySeatModal({
         title: "내 좌석 정보",
         onExit: function () {
-
             apiService.exitSeat().then(function () {
                 showToast("퇴실이 완료되었습니다.");
 
@@ -195,17 +194,44 @@ $(document).ready(function () {
         loginModal.show();
     });
 
-    mySeatBtn.click(function () {
-        let expiration = jwtUtils.checkExpiration(sessionStorage.getItem("scToken"));
-        if (!expiration) {
-            apiService.getMySeat()
-                .then(function (data) {
-                    console.log(data);
-                    mySeatModel.showModal(data);
-                })
-        } else {
-            logout();
+    let allInfoModal = new AllInfoModal({
+        title: "내 정보",
+        onExit: function () {
+            apiService.exitSeat().then(function () {
+                showToast("퇴실이 완료되었습니다.");
+
+                mySeatModel.close();
+            });
+
+        },
+        onExtension: function () {
+            apiService.extensionTimeSeat().then(function () {
+                showToast("시간 연장이 완료되었습니다..");
+                mySeatModel.close();
+            });
         }
+    });
+
+    mySeatBtn.click(function () {
+        apiService.getAllInfo()
+            .then(function (data) {
+                console.log(data);
+                allInfoModal.showModal(data)
+                // mySeatModel.showModal(data);
+            });
+
+
+        // let expiration = jwtUtils.checkExpiration(sessionStorage.getItem("scToken"));
+        // if (!expiration) {
+        //     apiService.getAllInfo()
+        //         .then(function (data) {
+        //             console.log(data);
+        //             allInfoModal.showModal(data)
+        //             // mySeatModel.showModal(data);
+        //         })
+        // } else {
+        //     logout();
+        // }
     });
     logoutBtn.click(function () {
         logout();

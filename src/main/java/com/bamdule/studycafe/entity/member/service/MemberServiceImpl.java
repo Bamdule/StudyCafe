@@ -1,5 +1,6 @@
 package com.bamdule.studycafe.entity.member.service;
 
+import com.bamdule.studycafe.entity.member.MemberVO;
 import com.bamdule.studycafe.jwt.JWTUtils;
 import com.bamdule.studycafe.entity.member.PaidMemberVO;
 import com.bamdule.studycafe.exception.CustomException;
@@ -116,6 +117,25 @@ public class MemberServiceImpl implements MemberService {
         memberPayload.setMemberName(paidMemberVO.getMemberName());
 
         return jwtUtils.createMemberToken(memberPayload);
+    }
+
+    @Override
+    public MemberVO getMemberById(Integer memberId) {
+        Optional<Member> optionalMember = memberRepository.findById(memberId);
+        if (optionalMember.isPresent()) {
+            Member member = optionalMember.get();
+            return MemberVO.builder()
+                    .id(member.getId())
+                    .email(member.getEmail())
+                    .phone(member.getPhone())
+                    .name(member.getName())
+                    .joinDt(member.getJoinDt())
+                    .targetStudyHour(member.getTargetStudyHour())
+                    .build();
+
+        } else {
+            throw new CustomException(ExceptionCode.NOT_FOUND_USER);
+        }
     }
 
 }

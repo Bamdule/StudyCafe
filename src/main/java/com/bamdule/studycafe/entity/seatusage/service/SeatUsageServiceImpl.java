@@ -79,8 +79,8 @@ public class SeatUsageServiceImpl implements SeatUsageService {
 
             return SeatUsageVO.builder()
                     .id(seatUsage.getId())
-                    .memberId(member.getId())
-                    .memberName(member.getName())
+//                    .memberId(member.getId())
+//                    .memberName(member.getName())
                     .seatId(seat.getId())
                     .number(seat.getNumber())
                     .startDt(seatUsage.getStartDt())
@@ -131,7 +131,7 @@ public class SeatUsageServiceImpl implements SeatUsageService {
 
                 return optionalSeatUsageVO.get();
             } else {
-                throw new CustomException(ExceptionCode.INVALID_TIME_EXTEND, extensionTime + " ~ " + extensionTime.plusHours(1) + " 사이에 시간 연장을 할 수 있습니다.");
+                throw new CustomException(ExceptionCode.INVALID_TIME_EXTEND, extensionTime + " ~ " + extensionTime.plusHours(1) + "<br/>사이에 시간 연장을 할 수 있습니다.");
             }
         }
 
@@ -152,8 +152,12 @@ public class SeatUsageServiceImpl implements SeatUsageService {
         Optional<SeatUsageVO> optionalSeatUsage = seatUsageRepository.getSeatUsageByMemberId(memberId);
 
         if (optionalSeatUsage.isEmpty()) {
-            throw new CustomException(ExceptionCode.NOT_FOUND_USER_IN_USE);
+            return null;
         } else {
+            SeatUsageVO seatUsageVO = optionalSeatUsage.get();
+
+            LocalDateTime extensionTime = seatUsageVO.getEndDt().minusHours(1);
+            seatUsageVO.setExpansion(isExtensionTime(extensionTime) ? "연장 가능" : "연장 불가");
             return optionalSeatUsage.get();
         }
     }
