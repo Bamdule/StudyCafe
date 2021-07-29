@@ -3,14 +3,18 @@ class AllInfoModal extends BaseModal {
         super(param);
         this.callback = {
             onExit: param.onExit,
-            onExtension: param.onExtension
+            onExtension: param.onExtension,
+            onStudyInfo: param.onStudyInfo,
+            updateMemberCallback: param.updateMemberCallback
         }
         this.init();
+        this.currentDate = new Date();
     }
 
     init() {
+
         let {baseDiv, contentDiv, actionsDiv} = this.ui;
-        let {onExit, onExtension} = this.callback;
+        let {onExit, onExtension, updateMemberCallback} = this.callback;
         let self = this;
         baseDiv.css("width", "50%");
 
@@ -20,6 +24,16 @@ class AllInfoModal extends BaseModal {
             self.resetSeatInfo();
         });
         $("#expansionBtn").click(onExtension);
+
+
+        let updateMemberModal = new UpdateMemberModal({
+            title: "내 정보 수정",
+            updateMemberCallback: updateMemberCallback
+        });
+
+        $("#updateMemberBtn").click(function () {
+            updateMemberModal.show();
+        })
 
 
         this.event({
@@ -44,7 +58,7 @@ class AllInfoModal extends BaseModal {
         $("#phoneView").text(member.phone);
 
         if (seatUsage !== null) {
-            $("#seatNumberView").text(seatUsage.number);
+            $("#seatNumberView").text(`(${seatUsage.roomName}) ${seatUsage.number}번 좌석`);
             $("#expansionView").text(seatUsage.expansion);
             $("#startDtView").text(seatUsage.startDtText);
             $("#endDtView").text(seatUsage.endDtText);
@@ -52,12 +66,18 @@ class AllInfoModal extends BaseModal {
             this.resetSeatInfo();
         }
 
-        let fieldColor = ["white", "#B7F0B1", "#86E57F", "#47C83E", "#2F9D27"];
+        // let fieldColor = ["white", "#B7F0B1", "#86E57F", "#47C83E", "#2F9D27"];
 
+
+    }
+
+
+    drawStudyInfo(studyInfo) {
         let studyDays = studyInfo.studyDays;
         let studies = {};
         let totalMinutes = 0;
         let totalHour = 0;
+        let self = this;
         if (studyDays !== null) {
             for (let studyDay of studyDays) {
                 let day = studyDay.day;
@@ -72,8 +92,10 @@ class AllInfoModal extends BaseModal {
         let studyField = $("#studyField");
         studyField.empty();
 
-        let last = new Date(2021, 7, 0).getDate();
+        let currentDate = this.currentDate;
+        let last = new Date(2021, currentDate.getMonth() + 1, 0).getDate();
 
+        $("#dateView").text(`${currentDate.getFullYear()}년 ${currentDate.getMonth() + 1}월`);
 
         for (let index = 0; index < last; index++) {
             let studyHour = studies[index + 1];
@@ -101,24 +123,73 @@ class AllInfoModal extends BaseModal {
             }));
         }
 
-        if (member.targetStudyHour != undefined) {
-            $('#example6')
+        let targetStudyHour = studyInfo.targetStudyHour;
+
+        if (targetStudyHour != null) {
+            $('#studyGauge')
                 .progress({
                     label: 'ratio',
                     value: totalHour,
-                    total: member.targetStudyHour,
+                    total: targetStudyHour,
                     text: {
                         ratio: '{value} / {total}'
                     }
                 })
             ;
+        } else {
+            $('#studyGauge')
+                .progress({
+                    label: 'ratio',
+                    value: 0,
+                    total: 0,
+                    text: {
+                        ratio: '{value} / {total}'
+                    }
+                })
         }
-
 
     }
 
+    updateStudyInfo(studyInfo) {
+        this.drawStudyInfo(studyInfo);
+        let self = this;
+
+        $("#leftMonthBtn").unbind('click');
+        $("#rightMonthBtn").unbind('click');
+
+
+        $("#leftMonthBtn").click(function () {
+            let currentDate = self.currentDate;
+
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            self.callback.onStudyInfo(self.dateConvertString(currentDate), function (studyInfo) {
+                self.drawStudyInfo(studyInfo);
+            });
+        });
+        $("#rightMonthBtn").click(function () {
+            let currentDate = self.currentDate;
+            currentDate.setMonth(self.currentDate.getMonth() + 1);
+            self.callback.onStudyInfo(self.dateConvertString(currentDate), function (studyInfo) {
+                self.drawStudyInfo(studyInfo);
+            });
+        });
+
+    }
+
+    dateConvertString(date) {
+        let month = date.getMonth() + 1;
+        return `${date.getFullYear()}-${month > 9 ? month : '0' + month}-01`
+    }
+
     showModal(allInfo) {
+        this.currentDate = new Date();
         this.updateInfo(allInfo);
+        let self = this;
+
+        this.callback.onStudyInfo(this.dateConvertString(new Date()), function (studyInfo) {
+            self.updateStudyInfo(studyInfo);
+        });
+
         this.show();
     }
 }

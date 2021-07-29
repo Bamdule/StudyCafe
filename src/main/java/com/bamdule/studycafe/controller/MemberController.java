@@ -6,6 +6,7 @@ import com.bamdule.studycafe.jwt.JWTUtils;
 import com.bamdule.studycafe.entity.member.MemberTO;
 import com.bamdule.studycafe.entity.member.service.MemberService;
 import com.bamdule.studycafe.jwt.EmailPayload;
+import com.bamdule.studycafe.jwt.MemberPayload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,15 +47,21 @@ public class MemberController {
         return ResponseEntity.ok(newMember);
     }
 
-    @PutMapping(value = "/{memberId}")
-    public ResponseEntity<MemberTO> updateMember(
-            @PathVariable Integer memberId,
-            @Valid @RequestBody MemberTO memberTO
-    ) {
+    @PutMapping(value = "")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateMember(
+            @RequestHeader Map<String, Object> requestHeader,
+            @RequestParam Integer targetStudyHour,
+            @RequestParam String password
 
-        memberTO.setId(memberId);
-        MemberTO updatedMember = memberService.updateMember(memberTO);
-        return ResponseEntity.ok(updatedMember);
+    ) {
+        logger.info("[MYTEST] : {}", password);
+
+        memberService.updateMember(
+                getMemberPayload(requestHeader).getMemberId(),
+                targetStudyHour,
+                password
+        );
     }
 
     @PostMapping(value = "/email")
@@ -78,5 +85,9 @@ public class MemberController {
         return ResponseEntity.ok(map);
     }
 
+    public MemberPayload getMemberPayload(Map<String, Object> requestHeader) {
+        String accessToken = (String) requestHeader.get("authorization");
+        return jwtUtils.verifyMemberJWT(accessToken);
+    }
 }
 

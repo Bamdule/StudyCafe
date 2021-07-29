@@ -7,6 +7,7 @@ import com.bamdule.studycafe.entity.reservation.service.ReservationService;
 import com.bamdule.studycafe.entity.room.RoomVO;
 import com.bamdule.studycafe.entity.seat.SeatVO;
 import com.bamdule.studycafe.entity.seatusage.SeatUsageVO;
+import com.bamdule.studycafe.entity.seatusage.history.StudyInfoVO;
 import com.bamdule.studycafe.entity.seatusage.service.SeatUsageService;
 import com.bamdule.studycafe.exception.CustomException;
 import com.bamdule.studycafe.exception.ExceptionCode;
@@ -66,15 +67,19 @@ public class StudyCafeServiceImpl implements StudyCafeService {
     }
 
     @Override
-    public AllInfoVO getAllInfo(Integer memberId, String studyMonth) {
+    public AllInfoVO getAllInfo(Integer memberId) {
 
         return AllInfoVO.builder()
                 .seatUsage(seatUsageService.getSeatUsageByMemberId(memberId))
-                .studyInfo(seatUsageService.getStudyInfo(
-                        LocalDate.parse(studyMonth, DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-                        memberId
-                ))
                 .member(memberService.getMemberById(memberId))
                 .build();
+    }
+
+    @Override
+    public StudyInfoVO getStudyInfo(Integer memberId, String studyDate) {
+        return seatUsageService.getStudyInfo(
+                memberId,
+                LocalDate.parse(studyDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+        );
     }
 }

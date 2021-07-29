@@ -112,23 +112,30 @@ public class StudyCafeController {
         return ResponseEntity.ok(seatUsageVO);
     }
 
-    //내 좌석 정보
-    @GetMapping(value = "/myseat")
-    public ResponseEntity getMySeat(@RequestHeader Map<String, Object> requestHeader) {
-        Integer memberId = getMemberPayload(requestHeader).getMemberId();
-
-        SeatUsageVO seatUsageVO = studyCafeService.getSeatUsageByMemberId(memberId);
-
-        seatUsageService.getStudyInfo(LocalDate.now(), memberId).getStudyDays().forEach(studyDay -> logger.info("[MYTEST] studyDay : {}", studyDay));
-        ;
-        return ResponseEntity.ok(seatUsageVO);
-    }
+//    //내 좌석 정보
+//    @GetMapping(value = "/myseat")
+//    public ResponseEntity getMySeat(@RequestHeader Map<String, Object> requestHeader) {
+//        Integer memberId = getMemberPayload(requestHeader).getMemberId();
+//
+//        SeatUsageVO seatUsageVO = studyCafeService.getSeatUsageByMemberId(memberId);
+//
+//        seatUsageService.getStudyInfo(LocalDate.now(), memberId).getStudyDays().forEach(studyDay -> logger.info("[MYTEST] studyDay : {}", studyDay));
+//        ;
+//        return ResponseEntity.ok(seatUsageVO);
+//    }
 
     //내 좌석 정보
     @GetMapping(value = "/allInfo")
-    public ResponseEntity getAllInfo(@RequestHeader Map<String, Object> requestHeader, String studyMonth) {
+    public ResponseEntity getAllInfo(@RequestHeader Map<String, Object> requestHeader) {
         Integer memberId = getMemberPayload(requestHeader).getMemberId();
-        return ResponseEntity.ok(studyCafeService.getAllInfo(memberId, studyMonth));
+        return ResponseEntity.ok(studyCafeService.getAllInfo(memberId));
+    }
+
+    //내 좌석 정보
+    @GetMapping(value = "/studyInfo")
+    public ResponseEntity getStudyInfo(@RequestHeader Map<String, Object> requestHeader, String studyDate) {
+        Integer memberId = getMemberPayload(requestHeader).getMemberId();
+        return ResponseEntity.ok(studyCafeService.getStudyInfo(memberId, studyDate));
     }
 
     //좌석 현황

@@ -29,14 +29,10 @@ public class Member {
     private String email;
 
     @JsonIgnore
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     private String password;
 
     @Column(name = "join_dt", updatable = false)
     private LocalDateTime joinDt;
-
-    @Column(name = "target_study_hour")
-    private Integer targetStudyHour;
-
 
 }

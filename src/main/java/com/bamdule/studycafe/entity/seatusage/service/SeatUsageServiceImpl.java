@@ -14,6 +14,8 @@ import com.bamdule.studycafe.entity.seatusage.history.StudyDayVO;
 import com.bamdule.studycafe.entity.seatusage.history.StudyInfoVO;
 import com.bamdule.studycafe.entity.seatusage.repository.SeatUsageHistoryRepository;
 import com.bamdule.studycafe.entity.seatusage.repository.SeatUsageRepository;
+import com.bamdule.studycafe.entity.targetstudy.TargetStudy;
+import com.bamdule.studycafe.entity.targetstudy.repository.TargetStudyRepository;
 import com.bamdule.studycafe.exception.CustomException;
 import com.bamdule.studycafe.exception.ExceptionCode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +41,12 @@ public class SeatUsageServiceImpl implements SeatUsageService {
 
     @Autowired
     private MemberRepository memberRepository;
+
     @Autowired
     private SeatRepository seatRepository;
+
+    @Autowired
+    private TargetStudyRepository targetStudyRepository;
 
     @Override
     public SeatUsageVO saveSeatUsage(Integer memberId, Integer roomId, Integer seatId) {
@@ -208,14 +214,22 @@ public class SeatUsageServiceImpl implements SeatUsageService {
     }
 
     @Override
-    public StudyInfoVO getStudyInfo(LocalDate month, Integer memberId) {
-        String yyyyMM = month.format(DateTimeFormatter.ofPattern("yyyyMM"));
+    public StudyInfoVO getStudyInfo(Integer memberId, LocalDate date) {
+        String yyyyMM = date.format(DateTimeFormatter.ofPattern("yyyyMM"));
         List<StudyDayVO> studyDays = seatUsageHistoryRepository.getListStudyDay(yyyyMM, memberId);
 
-        return StudyInfoVO.builder()
-                .month(month.toString())
+        Optional<TargetStudy> optionalTargetStudy = targetStudyRepository.getTargetStudyByMemberIdAndDate(memberId, date);
+
+        StudyInfoVO studyInfoVO = StudyInfoVO.builder()
+                .date(date.toString())
                 .studyDays(studyDays)
                 .build();
+
+        if (optionalTargetStudy.isPresent()) {
+            studyInfoVO.setTargetStudyHour(optionalTargetStudy.get().getTargetStudyHour());
+        }
+
+        return studyInfoVO;
     }
 
     private boolean isExtensionTime(LocalDateTime extensionTime) {

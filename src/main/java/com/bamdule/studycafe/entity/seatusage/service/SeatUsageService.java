@@ -27,6 +27,6 @@ public interface SeatUsageService {
 
     public void updateSeatUsageHistoryEndDt(Integer memberId);
 
-    public StudyInfoVO getStudyInfo(LocalDate month, Integer memberId);
+    public StudyInfoVO getStudyInfo(Integer memberId, LocalDate date);
 
 }

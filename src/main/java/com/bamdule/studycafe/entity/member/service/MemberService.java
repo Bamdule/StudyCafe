@@ -7,7 +7,11 @@ public interface MemberService {
 
     MemberTO saveMember(MemberTO memberTO);
 
-    MemberTO updateMember(MemberTO memberTO);
+    void updateMember(
+
+            Integer memberId,
+            Integer targetStudyHour,
+            String password);
 
     String loginMember(String phone, String password);
 

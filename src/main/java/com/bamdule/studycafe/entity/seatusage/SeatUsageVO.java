@@ -27,11 +27,9 @@ public class SeatUsageVO {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String expansion;
 
-//    @JsonInclude(JsonInclude.Include.NON_NULL)
-//    private Integer memberId;
-//
-//    @JsonInclude(JsonInclude.Include.NON_NULL)
-//    private String memberName;
+    private Integer roomId;
+
+    private String roomName;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private LocalDateTime startDt;

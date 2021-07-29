@@ -23,8 +23,6 @@ public class MemberVO {
 
     private LocalDateTime joinDt;
 
-    private Integer targetStudyHour;
-
     public String getJoinDtText() {
         return DateUtils.localDateTimeToString(this.joinDt);
     }

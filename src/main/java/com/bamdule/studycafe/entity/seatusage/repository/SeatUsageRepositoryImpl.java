@@ -40,14 +40,15 @@ public class SeatUsageRepositoryImpl implements SeatUsageRepositoryCustom {
                         seatUsage.id,
                         seatUsage.seat.id.as("seatId"),
                         seatUsage.seat.number,
-//                        seatUsage.member.id.as("memberId"),
-//                        seatUsage.member.name.as("memberName"),
+                        room.id.as("roomId"),
+                        room.name.as("roomName"),
                         seatUsage.startDt,
                         seatUsage.endDt
                 ))
                 .from(seatUsage)
                 .join(seatUsage.seat, seat)
                 .join(seatUsage.member, member)
+                .join(seat.room, room)
                 .where(seatUsage.member.id.eq(memberId))
                 .fetchOne();
 

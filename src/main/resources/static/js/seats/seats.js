@@ -199,7 +199,6 @@ $(document).ready(function () {
         onExit: function () {
             apiService.exitSeat().then(function () {
                 showToast("퇴실이 완료되었습니다.");
-
                 mySeatModel.close();
             });
 
@@ -208,6 +207,19 @@ $(document).ready(function () {
             apiService.extensionTimeSeat().then(function () {
                 showToast("시간 연장이 완료되었습니다..");
                 mySeatModel.close();
+            });
+        },
+        onStudyInfo: function (studyDate, studyInfoCallback) {
+            apiService
+                .studyInfo(studyDate)
+                .then(function (studyInfo) {
+                    studyInfoCallback(studyInfo);
+                })
+
+        },
+        updateMemberCallback: function (member, success) {
+            apiService.updateMember(member).then(function () {
+                success();
             });
         }
     });

@@ -177,7 +177,49 @@ class ApiService {
                 type: "get",
                 dataType: 'json',
                 contentType: "application/x-www-form-urlencoded",
-                data: {studyMonth: "2021-07-01"},
+                data: {studyDate: "2021-07-01"},
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("authorization", sessionStorage.getItem("scToken"));
+                },
+                success: function (data) {
+                    resolve(data);
+                },
+                error: function (data) {
+                    reject(data);
+                }
+            });
+        });
+    }
+
+    studyInfo(studyDate) {
+        return new Promise(function (resolve, reject) {
+            $.ajax({
+                url: `/api/studycafe/studyInfo`,
+                type: "get",
+                dataType: 'json',
+                contentType: "application/x-www-form-urlencoded",
+                data: {studyDate},
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("authorization", sessionStorage.getItem("scToken"));
+                },
+                success: function (data) {
+                    resolve(data);
+                },
+                error: function (data) {
+                    reject(data);
+                }
+            });
+        });
+    }
+
+    updateMember(member) {
+        return new Promise(function (resolve, reject) {
+            $.ajax({
+                url: `/api/member`,
+                type: "put",
+                dataType: 'json',
+                contentType: "application/x-www-form-urlencoded",
+                data: {password: member.password, targetStudyHour: member.targetStudyHour},
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader("authorization", sessionStorage.getItem("scToken"));
                 },

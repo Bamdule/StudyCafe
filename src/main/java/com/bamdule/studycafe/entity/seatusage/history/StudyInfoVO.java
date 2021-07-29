@@ -12,7 +12,9 @@ import java.util.List;
 @ToString
 public class StudyInfoVO {
 
-    private String month;
+    private String date;
     private List<StudyDayVO> studyDays;
+
+    private Integer targetStudyHour = 0;
 
 }

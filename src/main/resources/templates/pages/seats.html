@@ -26,6 +26,7 @@
     <script type="text/javascript" th:src="@{/js/common/modals/NoticeModal.js}"></script>
     <script type="text/javascript" th:src="@{/js/common/modals/SignUpModal.js}"></script>
     <script type="text/javascript" th:src="@{/js/common/modals/AllInfoModal.js}"></script>
+    <script type="text/javascript" th:src="@{/js/common/modals/UpdateMemberModal.js}"></script>
 
     <script type="text/javascript" th:src="@{/js/common/api/ApiService.js}"></script>
     <script type="text/javascript" th:src="@{/js/seats/SeatManager.js}"></script>
@@ -83,7 +84,7 @@
             좌석 예약
         </div>
         <div id="mySeatBtn" class="menu">
-            내 좌석 정보
+            내 정보
         </div>
         <div id="logoutBtn" class="menu">
             로그아웃
@@ -128,7 +129,7 @@
 </div>
 
 <div style="width:100%; height: 48px; display: flex; justify-content: center; align-items: center;color: white; border: lightgray solid 1px; background-color: #232f46;">
-    서울시 관악구 신대방로 22 나길 보라매
+    서울시 관악구 신대방로 27 다길 보라매
 </div>
 
 <div id="allInfoDiv" class="ui form">
@@ -210,7 +211,12 @@
     </div>
     <div class="ui attached segment" style="padding-bottom: 0;">
         <div class="field">
-            <label>&nbsp;</label>
+            <div>
+                <div style="display: flex; justify-content: center; align-items: center; width: 160px;">
+                    <i id="leftMonthBtn" class="caret left icon"></i><span id="dateView"></span><i id="rightMonthBtn"
+                                                                                                   class="caret right icon"></i>
+                </div>
+            </div>
             <div id="studyField"
                  style="display: grid;grid-template-columns: repeat(7, 20px); grid-template-rows: repeat(5, 20px); gap:3px 3px;">
             </div>
@@ -227,9 +233,9 @@
                 <div style="font-size: 10px;">more</div>
             </div>
         </div>
-        <div class="field">
-            <label>공부 목표 수치</label>
-            <div class="ui progress red" id="example6">
+        <div class="field" style="padding-top: 20px;">
+            <label>목표 공부 수치 (총 공부 시간 / 목표 시간)</label>
+            <div class="ui progress red" id="studyGauge">
                 <div class="bar">
                     <div class="progress"></div>
                 </div>
@@ -239,36 +245,50 @@
     </div>
 </div>
 
-<div>
-    <div id="signUpDiv" class="ui form">
-        <div class="field required">
-            <label>이메일</label>
-            <div class="ui action input">
-                <input id="email" type="text"/>
-                <button id="requestEmailCodeBtn" class="ui button">인증</button>
-            </div>
-        </div>
-        <div class="field">
-            <label>인증 코드</label>
-            <input id="emailCode" type="text"/>
-        </div>
-        <div class="field required">
-            <label>이름</label>
-            <input id="name" type="text"/>
-        </div>
-        <div class="field required">
-            <label>휴대폰 번호</label>
-            <input id="phone" type="text"/>
-        </div>
-        <div class="field required">
-            <label>비밀 번호</label>
-            <input id="password" type="password"/>
-        </div>
+<div id="updateMemberDiv" class="ui form">
+    <div class="field">
+        <label>목표 공부 시간</label>
+        <input id="targetStudyHour" type="number"/>
+    </div>
+    <div class="field">
+        <label>비밀 번호</label>
+        <input id="memberPassword" type="password"/>
+    </div>
 
-        <div class="field required">
-            <label>비밀 번호 확인</label>
-            <input id="repassword" type="password"/>
+    <div class="field">
+        <label>비밀 번호 확인</label>
+        <input id="memberRepassword" type="password"/>
+    </div>
+</div>
+
+<div id="signUpDiv" class="ui form">
+    <div class="field required">
+        <label>이메일</label>
+        <div class="ui action input">
+            <input id="email" type="text"/>
+            <button id="requestEmailCodeBtn" class="ui button">인증</button>
         </div>
+    </div>
+    <div class="field">
+        <label>인증 코드</label>
+        <input id="emailCode" type="text"/>
+    </div>
+    <div class="field required">
+        <label>이름</label>
+        <input id="name" type="text"/>
+    </div>
+    <div class="field required">
+        <label>휴대폰 번호</label>
+        <input id="phone" type="text"/>
+    </div>
+    <div class="field required">
+        <label>비밀 번호</label>
+        <input id="password" type="password"/>
+    </div>
+
+    <div class="field required">
+        <label>비밀 번호 확인</label>
+        <input id="repassword" type="password"/>
     </div>
 </div>
 </body>

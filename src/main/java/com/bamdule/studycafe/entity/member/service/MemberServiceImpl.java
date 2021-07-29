@@ -1,6 +1,8 @@
 package com.bamdule.studycafe.entity.member.service;
 
 import com.bamdule.studycafe.entity.member.MemberVO;
+import com.bamdule.studycafe.entity.targetstudy.repository.TargetStudyRepository;
+import com.bamdule.studycafe.entity.targetstudy.service.TargetStudyService;
 import com.bamdule.studycafe.jwt.JWTUtils;
 import com.bamdule.studycafe.entity.member.PaidMemberVO;
 import com.bamdule.studycafe.exception.CustomException;
@@ -14,7 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -24,6 +28,9 @@ public class MemberServiceImpl implements MemberService {
 
     @Autowired
     private MemberRepository memberRepository;
+
+    @Autowired
+    private TargetStudyService targetStudyService;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -76,21 +83,26 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public MemberTO updateMember(MemberTO memberTO) {
+    public void updateMember(
+            Integer memberId,
+            Integer targetStudyHour,
+            String password) {
 
-        Optional<Member> OptionalMember = memberRepository.findById(memberTO.getId());
+        Optional<Member> OptionalMember = memberRepository.findById(memberId);
 
         if (OptionalMember.isEmpty()) {
             throw new CustomException(ExceptionCode.NOT_FOUND_USER);
         } else {
-            Member updatedMember = OptionalMember.get();
-            updatedMember.setName(memberTO.getName());
+            if (!StringUtils.isEmpty(password)) {
+                Member updatedMember = OptionalMember.get();
+                updatedMember.setPassword(passwordEncoder.encode(password));
+                memberRepository.save(updatedMember);
+            }
 
-            memberRepository.save(updatedMember);
-
-            MemberTO result = modelMapper.map(updatedMember, MemberTO.class);
-            result.setPassword("");
-            return result;
+            if (targetStudyHour != null && targetStudyHour > 0) {
+                LocalDate now = LocalDate.now();
+                targetStudyService.saveTargetStudy(memberId, LocalDate.of(now.getYear(), now.getMonth(), 1), targetStudyHour);
+            }
         }
     }
 
@@ -130,7 +142,6 @@ public class MemberServiceImpl implements MemberService {
                     .phone(member.getPhone())
                     .name(member.getName())
                     .joinDt(member.getJoinDt())
-                    .targetStudyHour(member.getTargetStudyHour())
                     .build();
 
         } else {

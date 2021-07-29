@@ -15,7 +15,5 @@ public class AllInfoVO {
 
     private MemberVO member;
 
-    private StudyInfoVO studyInfo;
-
     private SeatUsageVO seatUsage;
 }
