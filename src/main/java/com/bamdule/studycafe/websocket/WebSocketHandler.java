@@ -50,6 +50,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
         Message message = new Message(messageType, obj);
 
         try {
+            logger.info("[MYTEST] websocket : {}",obj);
             for (WebSocketSession webSocketSession : sessions) {
                 webSocketSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(message)));
             }

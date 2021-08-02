@@ -55,8 +55,6 @@ public class MemberController {
             @RequestParam String password
 
     ) {
-        logger.info("[MYTEST] : {}", password);
-
         memberService.updateMember(
                 getMemberPayload(requestHeader).getMemberId(),
                 targetStudyHour,

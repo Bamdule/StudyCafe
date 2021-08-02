@@ -199,9 +199,9 @@
         <profile>
             <id>dev</id>
             <properties>
-                <db.url>ZNVgCDlDyGLAiVuOFyKbuh6k948NL2Oxo/Lxvi1+enSsVsGV8GTtDCRU12qBjYKkM2HkzKhFjjA=</db.url>
-                <db.username>wxKpNxPnLSHl/hjg0l/9qg==</db.username>
-                <db.password>RyRfn8jiIVAd0gfNsDxOzw==</db.password>
+                <db.url>Qq7dh7YC9QkhaGkLjsQHDNkjL0ZV2npA8+AVl5hbwepO+SoYF7P2qTalRMsyXvQ+Tw9sQavOPruvnIUMPPpwQAI6cn05S/soh3OKhIO8C+ecLSprUU5g76SaL6+N4ILpSJLjQHDLqHIiER0C2XLsuFK0oZXTLG2n0uF47un46gk=</db.url>
+                <db.username>aOpVWXwIYAIuiQmpYFng2A==</db.username>
+                <db.password>p1sg8MGyVKZdARLxSRpw5Mw0q0feIBfp</db.password>
 
                 <logback.level>INFO</logback.level>
                 <logback.dir>logs/${project.name}</logback.dir>

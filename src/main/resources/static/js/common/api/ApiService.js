@@ -1,12 +1,13 @@
 class ApiService {
 
     constructor() {
+        this.contextPath = $("#contextPath").val();
     }
 
     getStudyCafe() {
         return new Promise(function (resolve, reject) {
             $.ajax({
-                url: `/api/studycafe`,
+                url: `${$("#contextPath").val()}api/studycafe`,
                 type: "get",
                 dataType: 'json',
                 contentType: "application/json",
@@ -24,7 +25,7 @@ class ApiService {
     getSeats(roomId) {
         return new Promise(function (resolve, reject) {
             $.ajax({
-                url: `/api/studycafe/room/${roomId}`,
+                url: `${$("#contextPath").val()}api/studycafe/room/${roomId}`,
                 type: "get",
                 dataType: 'json',
                 contentType: "application/json",
@@ -42,7 +43,7 @@ class ApiService {
     loginMember(phone, password) {
         return new Promise(function (resolve, reject) {
             $.ajax({
-                url: `/api/member/login`,
+                url: `${$("#contextPath").val()}api/member/login`,
                 type: "post",
                 dataType: 'json',
                 contentType: "application/x-www-form-urlencoded",
@@ -61,7 +62,7 @@ class ApiService {
     signUpMember(member) {
         return new Promise(function (resolve, reject) {
             $.ajax({
-                url: `/api/member`,
+                url: `${$("#contextPath").val()}api/member`,
                 type: "post",
                 dataType: 'json',
                 contentType: "application/json",
@@ -79,7 +80,7 @@ class ApiService {
     requestEmailCode(email) {
         return new Promise(function (resolve, reject) {
             $.ajax({
-                url: `/api/member/email`,
+                url: `${$("#contextPath").val()}api/member/email`,
                 type: "post",
                 dataType: 'json',
                 contentType: "application/x-www-form-urlencoded",
@@ -97,7 +98,7 @@ class ApiService {
     extensionTimeSeat() {
         return new Promise(function (resolve, reject) {
             $.ajax({
-                url: `/api/studycafe/seat`,
+                url: `${$("#contextPath").val()}api/studycafe/seat`,
                 type: "put",
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader("authorization", sessionStorage.getItem("scToken"));
@@ -115,7 +116,7 @@ class ApiService {
     exitSeat() {
         return new Promise(function (resolve, reject) {
             $.ajax({
-                url: `/api/studycafe/seat`,
+                url: `${$("#contextPath").val()}api/studycafe/seat`,
                 type: "delete",
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader("authorization", sessionStorage.getItem("scToken"));
@@ -133,7 +134,7 @@ class ApiService {
     useSeat(roomId, seatId) {
         return new Promise(function (resolve, reject) {
             $.ajax({
-                url: `/api/studycafe/room/${roomId}/seat/${seatId}`,
+                url: `${$("#contextPath").val()}api/studycafe/room/${roomId}/seat/${seatId}`,
                 type: "post",
                 dataType: 'json',
                 contentType: "application/json",
@@ -153,7 +154,7 @@ class ApiService {
     getMySeat() {
         return new Promise(function (resolve, reject) {
             $.ajax({
-                url: `/api/studycafe/myseat`,
+                url: `${$("#contextPath").val()}api/studycafe/myseat`,
                 type: "get",
                 dataType: 'json',
                 contentType: "application/json",
@@ -173,7 +174,7 @@ class ApiService {
     getAllInfo() {
         return new Promise(function (resolve, reject) {
             $.ajax({
-                url: `/api/studycafe/allInfo`,
+                url: `${$("#contextPath").val()}api/studycafe/allInfo`,
                 type: "get",
                 dataType: 'json',
                 contentType: "application/x-www-form-urlencoded",
@@ -194,7 +195,7 @@ class ApiService {
     studyInfo(studyDate) {
         return new Promise(function (resolve, reject) {
             $.ajax({
-                url: `/api/studycafe/studyInfo`,
+                url: `${$("#contextPath").val()}api/studycafe/studyInfo`,
                 type: "get",
                 dataType: 'json',
                 contentType: "application/x-www-form-urlencoded",
@@ -215,7 +216,7 @@ class ApiService {
     updateMember(member) {
         return new Promise(function (resolve, reject) {
             $.ajax({
-                url: `/api/member`,
+                url: `${$("#contextPath").val()}api/member`,
                 type: "put",
                 dataType: 'json',
                 contentType: "application/x-www-form-urlencoded",
@@ -236,7 +237,7 @@ class ApiService {
     saveReservation() {
         return new Promise(function (resolve, reject) {
             $.ajax({
-                url: `/api/studycafe/seat/reservation`,
+                url: `${$("#contextPath").val()}api/studycafe/seat/reservation`,
                 type: "post",
                 dataType: 'json',
                 beforeSend: function (xhr) {
@@ -255,7 +256,7 @@ class ApiService {
     getSeatAvailability(roomId) {
         return new Promise(function (resolve, reject) {
             $.ajax({
-                url: `/api/studycafe/seat/availability?roomId=${roomId}`,
+                url: `${$("#contextPath").val()}api/studycafe/seat/availability?roomId=${roomId}`,
                 type: "get",
                 dataType: 'json',
                 contentType: "application/x-www-form-urlencoded",
@@ -272,7 +273,7 @@ class ApiService {
     getReservation() {
         return new Promise(function (resolve, reject) {
             $.ajax({
-                url: `/api/studycafe/seat/reservation`,
+                url: `${$("#contextPath").val()}api/studycafe/seat/reservation`,
                 type: "get",
                 dataType: 'json',
                 success: function (data) {

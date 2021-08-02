@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -14,6 +16,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @SpringBootTest
+@ActiveProfiles("test")
+@TestPropertySource(locations = "classpath:test.properties")
 class StudyCafeApplicationTests {
 
     @Test
@@ -34,7 +38,7 @@ class StudyCafeApplicationTests {
 
     @Test
     void js() {
-        String key = "xdweA9pIXGVSJ8nbPsZhqjBe1xu0XGw7H7u7p71sKnqJObc69hIhrIFOkQ8ne6JjzXYBl8EDYb0TX445megvYjdXNtVuXozxDeovfyfb2sbFm4cw0ikd72zN44yMxLtm";
+        String key = "key";
         StandardPBEStringEncryptor pbeEnc = new StandardPBEStringEncryptor();
         pbeEnc.setAlgorithm("PBEWithMD5AndDES");
 
@@ -61,9 +65,9 @@ class StudyCafeApplicationTests {
 
     @Test
     void jasypt() {
-        String url = "my_db_url";
-        String username = "my_db_username";
-        String password = "my_db_password";
+        String url = "url";
+        String username = "username";
+        String password = "password";
 
         System.out.println(jasyptEncoding(url));
         System.out.println(jasyptEncoding(username));
@@ -72,7 +76,7 @@ class StudyCafeApplicationTests {
 
     public String jasyptEncoding(String value) {
 
-        String key = "my_jasypt_key";
+        String key = "jasyptkey";
         StandardPBEStringEncryptor pbeEnc = new StandardPBEStringEncryptor();
         pbeEnc.setAlgorithm("PBEWithMD5AndDES");
         pbeEnc.setPassword(key);

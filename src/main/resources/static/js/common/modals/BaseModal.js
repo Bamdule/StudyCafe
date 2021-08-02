@@ -1,7 +1,6 @@
 class BaseModal {
     constructor(param) {
         let {title = ""} = param;
-        console.log(title)
 
         let baseDiv = $("<div>", {class: "ui modal"});
         let headerDiv = $("<div>", {class: "ui header", text: title});
@@ -42,7 +41,6 @@ class BaseModal {
 
     show() {
         this.ui.baseDiv.modal('show');
-        console.log(this.ui.baseDiv);
     }
 
     close() {

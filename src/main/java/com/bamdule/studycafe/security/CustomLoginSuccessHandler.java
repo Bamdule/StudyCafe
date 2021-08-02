@@ -34,6 +34,6 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
         studyCafeConfig.init();
         propertyConfig.setUseSeatSchedule(true);
 
-        httpServletResponse.sendRedirect("/studycafe");
+        httpServletResponse.sendRedirect("/");
     }
 }

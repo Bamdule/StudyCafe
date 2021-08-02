@@ -8,14 +8,8 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping(value = "/")
 public class PageController {
-//    @GetMapping(value = "/login")
-//    public ModelAndView loginPageView() {
-//        ModelAndView modelAndView = new ModelAndView("page/login");
-//
-//        return modelAndView;
-//    }
 
-    @GetMapping(value = "/studycafe")
+    @GetMapping(value = "/")
     public ModelAndView home() {
         ModelAndView mav = new ModelAndView("pages/seats");
         return mav;

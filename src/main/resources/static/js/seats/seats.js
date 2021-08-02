@@ -74,7 +74,7 @@ $(document).ready(function () {
     });
 
     let websocket = new Websocket({
-        serverUri: "/websocket",
+        serverUri: `${$("#contextPath").val()}websocket`,
         onMessage: function (result) {
             console.log(result);
             let data = JSON.parse(result.data);
@@ -157,7 +157,6 @@ $(document).ready(function () {
         signUpCallback: function (member) {
             apiService.signUpMember(member)
                 .then(function (data) {
-                    console.log(data);
                     showToast("회원가입이 완료되었습니다.");
                     signUpModal.close();
                 });
@@ -227,7 +226,6 @@ $(document).ready(function () {
     mySeatBtn.click(function () {
         apiService.getAllInfo()
             .then(function (data) {
-                console.log(data);
                 allInfoModal.showModal(data)
                 // mySeatModel.showModal(data);
             });

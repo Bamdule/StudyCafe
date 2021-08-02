@@ -54,7 +54,7 @@ public class StudyCafeController {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
-    @GetMapping(value = "")
+    @GetMapping
     public ResponseEntity<StudyCafeVO> findStudyCafe() {
         StudyCafeVO studyCafe = StudyCafeVO.builder()
                 .rooms(studyCafeConfig.getRooms())
@@ -131,7 +131,7 @@ public class StudyCafeController {
         return ResponseEntity.ok(studyCafeService.getAllInfo(memberId));
     }
 
-    //내 좌석 정보
+    //내 공부 정보
     @GetMapping(value = "/studyInfo")
     public ResponseEntity getStudyInfo(@RequestHeader Map<String, Object> requestHeader, String studyDate) {
         Integer memberId = getMemberPayload(requestHeader).getMemberId();

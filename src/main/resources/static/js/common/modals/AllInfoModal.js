@@ -81,7 +81,7 @@ class AllInfoModal extends BaseModal {
         if (studyDays !== null) {
             for (let studyDay of studyDays) {
                 let day = studyDay.day;
-                studies[day.substring(day.length - 2, day.length)] = parseInt(studyDay.studyMinutes / 60);
+                studies[parseInt(day.substring(day.length - 2, day.length))] = parseInt(studyDay.studyMinutes / 60);
                 totalMinutes += studyDay.studyMinutes;
 
             }
@@ -99,6 +99,7 @@ class AllInfoModal extends BaseModal {
 
         for (let index = 0; index < last; index++) {
             let studyHour = studies[index + 1];
+
             let backgroundColor = "white";
 
             if (studyHour !== undefined) {
