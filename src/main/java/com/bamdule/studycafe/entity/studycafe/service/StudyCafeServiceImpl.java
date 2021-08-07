@@ -34,12 +34,12 @@ public class StudyCafeServiceImpl implements StudyCafeService {
 
     @Override
     public SeatUsageVO saveSeatUsage(Integer memberId, Integer roomId, Integer seatId) {
-        Optional<ReservationVO> optionalReservationVO = reservationService.getFirstReservationVO();
+        Long countReservations = reservationService.getCountReservations();
 
         //예약자가 있는가?
-        if (optionalReservationVO.isPresent()) {
+        if (countReservations > 0) {
             //현재 회원이 예약자인가?
-            if (reservationService.checkReservationMember(optionalReservationVO.get(), memberId)) {
+            if (reservationService.checkReservationMember(memberId)) {
                 return seatUsageService.saveSeatUsage(memberId, roomId, seatId);
             } else {
                 throw new CustomException(ExceptionCode.EXIST_RESERVATION_USER);

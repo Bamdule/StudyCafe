@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -31,18 +32,33 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public void executeReservation() {
-        Optional<Reservation> optionalReservation = reservationRepository.findFirstReservation();
+        Long reservationCount = reservationRepository.getCountReservation();
 
-        if (optionalReservation.isPresent()) {
-            Reservation reservation = optionalReservation.get();
+        if (reservationCount > 0) {
+            Long availableSeatCount = seatUsageRepository.getCountAvailableSeat();
 
-            if (reservation.getValidDt() == null) {
-                reservation.setValidDt(LocalDateTime.now().plusMinutes(10));
-                reservationRepository.save(reservation);
-            } else {
-                if (reservation.getValidDt().isBefore(LocalDateTime.now())) {
-                    this.deleteReservation(reservation.getMemberId());
+            if (availableSeatCount > 0) {
+
+                List<Reservation> reservations = reservationRepository.getListReservationByLimit(availableSeatCount);
+
+                for (Reservation reservation : reservations) {
+                    saveOrDeleteReservation(reservation);
                 }
+
+            }
+
+        }
+
+
+    }
+
+    public void saveOrDeleteReservation(Reservation reservation) {
+        if (reservation.getValidDt() == null) {
+            reservation.setValidDt(LocalDateTime.now().plusMinutes(10));
+            reservationRepository.save(reservation);
+        } else {
+            if (reservation.getValidDt().isBefore(LocalDateTime.now())) {
+                this.deleteReservation(reservation.getMemberId());
             }
         }
     }
@@ -68,7 +84,7 @@ public class ReservationServiceImpl implements ReservationService {
                     .build();
 
             reservationRepository.save(reservation);
-            
+
             Long countReservation = reservationRepository.getCountReservation();
             webSocketHandler.broadcast(MessageType.SAVE_RESERVATION, countReservation);
             this.executeReservation();
@@ -85,22 +101,22 @@ public class ReservationServiceImpl implements ReservationService {
         }
     }
 
-    @Override
-    public Optional<ReservationVO> getFirstReservationVO() {
-        Optional<Reservation> optionalReservation = reservationRepository.findFirstReservation();
-        if (optionalReservation.isPresent()) {
-            Reservation reservation = optionalReservation.get();
-            return Optional.ofNullable(
-                    ReservationVO
-                            .builder()
-                            .id(reservation.getId())
-                            .memberId(reservation.getMemberId())
-                            .validDt(reservation.getValidDt())
-                            .build());
-        } else {
-            return Optional.ofNullable(null);
-        }
-    }
+//    @Override
+//    public Optional<ReservationVO> getFirstReservationVO() {
+//        Optional<Reservation> optionalReservation = reservationRepository.findFirstReservation();
+//        if (optionalReservation.isPresent()) {
+//            Reservation reservation = optionalReservation.get();
+//            return Optional.ofNullable(
+//                    ReservationVO
+//                            .builder()
+//                            .id(reservation.getId())
+//                            .memberId(reservation.getMemberId())
+//                            .validDt(reservation.getValidDt())
+//                            .build());
+//        } else {
+//            return Optional.ofNullable(null);
+//        }
+//    }
 
     @Override
     public void deleteReservation(Integer memberId) {
@@ -109,9 +125,13 @@ public class ReservationServiceImpl implements ReservationService {
         this.executeReservation();
     }
 
-    public boolean checkReservationMember(ReservationVO reservation, Integer memberId) {
+    public boolean checkReservationMember(Integer memberId) {
+
+        Optional<Reservation> optionalReservation = reservationRepository.findReservationByMemberId(memberId);
+
         //예약회원인가?
-        if (reservation.getMemberId().equals(memberId)) {
+        if (optionalReservation.isPresent()) {
+            Reservation reservation = optionalReservation.get();
             //예약 시간이만료되지 않았는가?
             if (reservation.getValidDt() != null && reservation.getValidDt().isAfter(LocalDateTime.now())) {
                 deleteReservation(memberId);

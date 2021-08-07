@@ -11,11 +11,9 @@ public interface ReservationService {
 
     public ReservationVO saveReservation(Integer memberId);
 
-    public Optional<ReservationVO> getFirstReservationVO();
-
     public void deleteReservation(Integer memberId);
 
-    public boolean checkReservationMember(ReservationVO reservation, Integer memberId);
+    public boolean checkReservationMember(Integer memberId);
 
     public Long getCountReservations();
 }
